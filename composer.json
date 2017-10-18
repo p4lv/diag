@@ -1,0 +1,13 @@
+{
+    "name": "pmx/diag",
+    "description": "Diagnostic messages storage engine",
+    "type": "project",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roman Shvets",
+            "email": "pomaxa@gmail.com"
+        }
+    ],
+    "require": {}
+}
