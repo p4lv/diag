@@ -68,7 +68,7 @@ class Record implements DiagRecord
         return (int)$this->projectId;
     }
 
-    public function toArray()
+    public function toArray(): array
     {
         return [
             'message' => $this->getMessage(),
