@@ -1,8 +1,10 @@
 # diag
 
+[![Build Status](https://travis-ci.org/p4lv/diag.svg?branch=master)](https://travis-ci.org/p4lv/diag)
+[![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
 
-#How to run#
+# How to run
 
 Dependencies:
 
@@ -11,7 +13,7 @@ Dependencies:
 
 Once you're done, simply `cd` to your project and run `docker-compose up -d`. This will initialise and start all the containers, then leave them running in the background.
 
-##Services exposed outside your environment##
+## Services exposed outside your environment
 
 You can access your application via **`localhost`**, if you're running the containers directly, or through **``** when run on a vm. nginx and mailhog both respond to any hostname, in case you want to add your own hostname on your `/etc/hosts` 
 
@@ -20,7 +22,7 @@ Service|Address outside containers
 Webserver|[localhost:7897](http://localhost:7897)
 MariaDB|**host:** `localhost`; **port:** `6670`
 
-##Hosts within your environment##
+## Hosts within your environment
 
 You'll need to configure your application to use any services you enabled:
 
@@ -32,7 +34,7 @@ Memcached|memcached|11211 (default)
 Redis|redis|6379 (default)
 ClickHouse|clickhouse|9000 (HTTP default)
 
-#Docker compose cheatsheet#
+# Docker compose cheatsheet
 
 **Note:** you need to cd first to where your docker-compose.yml file lives.
 
