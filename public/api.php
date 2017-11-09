@@ -4,7 +4,7 @@ namespace Diag;
 
 
 
-$record = new Record(...);
+$record = new Record($_GET['record']);
 
 $storage = new DataMapper(new Storage\Sqlite());
 

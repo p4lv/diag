@@ -3,6 +3,7 @@
 namespace Diag\Controller;
 
 
+use Diag\DiagResponse;
 use Diag\Storage\CanPersist;
 
 class Api
@@ -13,16 +14,18 @@ class Api
 
     public function getList(array $filters)
     {
-
     }
 
-    public function postRecord()
+    public function postRecords(): DiagResponse
     {
 
     }
 
-    public function getRecord()
+    public function postRecord(): DiagResponse
     {
+    }
 
+    public function getRecord(): DiagResponse
+    {
     }
 }

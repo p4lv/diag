@@ -14,13 +14,16 @@ class DataMapper
         $this->storage = $storage;
     }
 
-    public function store(Record $obj) : bool
+    public function store($obj): bool
     {
-        if ($obj->getId()) {
-            return $this->storage->update($obj);
+        if ($obj instanceof Record) {
+            return $this->storage->insert($obj);
         }
 
-        return $this->storage->insert($obj);
-    }
+        if (is_array($obj)) {
+            return $this->storage->batch($obj);
+        }
 
+        throw new \LogicException('Unknown issue in storage persistence');
+    }
 }

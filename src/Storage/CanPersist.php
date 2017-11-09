@@ -13,7 +13,7 @@ use Diag\Record;
 
 interface CanPersist
 {
-    public function insert(Record $data) : bool;
+    public function batch(array $data): bool;
 
-    public function update(Record $data) : bool;
+    public function insert(Record $data): bool;
 }

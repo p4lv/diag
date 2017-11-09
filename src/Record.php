@@ -8,13 +8,14 @@ class Record
     protected $id;
     protected $message;
     protected $object;
-    protected $type;
+    protected $eventType;
     protected $severity;
     protected $projectId;
-    protected $subProjectId;
+    protected $version;
 
-    public function __construct(array $data)
+    public function __construct(array $data = [])
     {
+        $this->version = 0;
         foreach ($data as $k => $v) {
             if(property_exists($this, $k)) {
                 $this->$k = $v;
@@ -58,41 +59,52 @@ class Record
      */
     public function getType()
     {
-        return $this->type;
+        return (string)$this->eventType;
     }
 
-    public function setType($type)
+    public function setType(string $eventType)
     {
-        $this->type = $type;
+        $this->eventType = $eventType;
     }
 
     public function getSeverity()
     {
-        return $this->severity;
+        return (int)$this->severity;
     }
 
-    public function setSeverity($severity)
+    public function setSeverity(int $severity)
     {
         $this->severity = $severity;
     }
 
     public function getProjectId()
     {
-        return $this->projectId;
+        return (int)$this->projectId;
     }
 
-    public function setProjectId($projectId)
+    public function toArray()
     {
-        $this->projectId = $projectId;
+        return [
+            'message' => $this->getMessage(),
+            'severity' => $this->getSeverity(),
+            'eventType' => $this->getType(),
+            'projectId' => $this->getProjectId(),
+            'version' => $this->getVersion(),
+        ];
     }
 
-    public function getSubProjectId()
+    /**
+     * @param mixed $version
+     * @return Record
+     */
+    public function setVersion(int $version)
     {
-        return $this->subProjectId;
+        $this->version = $version;
+        return $this;
     }
 
-    public function setSubProjectId($subProjectId)
+    private function getVersion()
     {
-        $this->subProjectId = $subProjectId;
+        return $this->version;
     }
 }
