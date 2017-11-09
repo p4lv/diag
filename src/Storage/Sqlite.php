@@ -2,6 +2,7 @@
 
 namespace Diag\Storage;
 
+use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
 use Diag\Record;
 
@@ -28,7 +29,7 @@ from {$this->logTable} ";
         $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
         if ($beforeId) {
-            $stm->bindParam(':beforeId', $beforeId);
+            $stm->bindParam(':beforeId', $beforeId, \PDO::PARAM_INT);
         }
 
         $stm->execute();
@@ -36,7 +37,7 @@ from {$this->logTable} ";
         return $result;
     }
 
-    public function insert(Record $data): bool
+    public function insert(DiagRecord $data): bool
     {
 
         $sql = "insert into {$this->logTable} (
@@ -59,13 +60,13 @@ NULL,
 
     }
 
-    public function get($id): Record
+    public function get($id): DiagRecord
     {
         $sql = "select id, message, severity, eventType, projectId, version from "
             . $this->logTable
             . " where id = :id";
         $stm = $this->engine->prepare($sql);
-        $stm->bindParam(':id', $id);
+        $stm->bindParam(':id', $id, \PDO::PARAM_INT);
 
         $stm->execute();
 //        return $stm->fetchObject(Record::class);

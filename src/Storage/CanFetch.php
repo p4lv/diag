@@ -3,11 +3,12 @@
 namespace Diag\Storage;
 
 
-use Diag\Record;
+
+use Diag\DiagRecord;
 
 interface CanFetch
 {
-    public function get($id) : Record;
+    public function get($id) : DiagRecord;
 
     public function search(array $filters) : array;
 

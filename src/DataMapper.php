@@ -16,7 +16,7 @@ class DataMapper
 
     public function store($obj): bool
     {
-        if ($obj instanceof Record) {
+        if ($obj instanceof DiagRecord) {
             return $this->storage->insert($obj);
         }
 

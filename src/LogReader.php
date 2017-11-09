@@ -24,7 +24,7 @@ class LogReader
         return $this->storage->search($array);
     }
 
-    public function get($id): Record
+    public function get($id): DiagRecord
     {
         return $this->storage->get($id);
     }

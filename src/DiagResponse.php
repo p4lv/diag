@@ -2,7 +2,6 @@
 
 namespace Diag;
 
-
 class DiagResponse
 {
     private $statusCode;
