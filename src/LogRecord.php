@@ -2,7 +2,11 @@
 
 namespace Diag;
 
-
+/**
+ * Class LogRecord
+ * @package Diag
+ * @deprecated I think this is not the best way of usage...
+ */
 class LogRecord
 {
     protected $id;
@@ -12,9 +16,9 @@ class LogRecord
 
     protected $severity;
     protected $projectId;
-    protected $subProjectId;
+    protected $version;
 
-    public function __construct($message, $object, $type, $severity, $projectId, $subProjectId = null)
+    public function __construct($message, $object, $type, $severity, $projectId, $version = 0)
     {
         $this->message = $message;
         $this->object = $object;
@@ -22,7 +26,7 @@ class LogRecord
 
         $this->severity = $severity;
         $this->projectId = $projectId;
-        $this->subProjectId = $subProjectId;
+        $this->version = $version;
     }
 
     public function getId()
@@ -89,13 +93,13 @@ class LogRecord
         $this->projectId = $projectId;
     }
 
-    public function getSubProjectId()
+    public function getVersion()
     {
-        return $this->subProjectId;
+        return $this->version;
     }
 
-    public function setSubProjectId($subProjectId)
+    public function setVersion($version)
     {
-        $this->subProjectId = $subProjectId;
+        $this->version = $version;
     }
 }

@@ -18,9 +18,12 @@ class Record
         $this->version = 0;
         foreach ($data as $k => $v) {
             if(property_exists($this, $k)) {
-                $this->$k = $v;
+                // use setters or direct inserting with post validation ?
+                $this->{$k} = $v;
             }
         }
+
+        //todo: add rules for validations... ??
     }
 
     public function getId()
