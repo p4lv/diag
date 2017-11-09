@@ -9,6 +9,7 @@ class LogRecord
     protected $message;
     protected $object;
     protected $type;
+
     protected $severity;
     protected $projectId;
     protected $subProjectId;

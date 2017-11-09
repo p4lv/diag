@@ -17,21 +17,22 @@ class Sqlite implements CanPersist, CanFetch
         $this->logTable = $logTable;
     }
 
-    public function last($numberOfElements = 10, ?int $beforeId = null): array {
+    public function last($numberOfElements = 10, ?int $beforeId = null): array
+    {
         $sql = "select id, message, severity, eventType, projectId, version
 from {$this->logTable} ";
 
-        if($beforeId) {
+        if ($beforeId) {
             $sql .= " where id < :beforeId ";
         }
-        $sql .=" order by id desc limit {$numberOfElements}";
+        $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
-        if($beforeId){
+        if ($beforeId) {
             $stm->bindParam(':beforeId', $beforeId);
         }
 
         $stm->execute();
-        $result =  $stm->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
 
@@ -74,21 +75,21 @@ NULL,
     {
         $record = new Record();
         $keys = array_keys($record->toArray());
-        $keys[]='id';
+        $keys[] = 'id';
 
         $sanitizedF = [];
 
         $sql = "select * from {$this->logTable} where ";
-        foreach ($filters as $k=>$v){
-            if(in_array($k, $keys)) {
-                $sanitizedF[$k]=$v;
+        foreach ($filters as $k => $v) {
+            if (in_array($k, $keys)) {
+                $sanitizedF[$k] = $v;
                 $sql .= " {$k} = :{$k}";
             }
 
         }
 
 
-        if(count($sanitizedF)) {
+        if (count($sanitizedF)) {
             $stm = $this->engine->prepare($sql);
             $stm->execute($sanitizedF);
             return $stm->fetchAll(\PDO::FETCH_ASSOC);
@@ -100,9 +101,9 @@ NULL,
     public function batch(array $data): bool
     {
         foreach ($data as $record) {
-            if($record instanceof Record) {
+            if ($record instanceof Record) {
                 $result = $this->insert($record);
-                if(!$result) {
+                if (!$result) {
                     throw new StorageFlushError;
                 }
             }

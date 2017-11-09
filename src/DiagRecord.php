@@ -9,7 +9,7 @@
 namespace Diag;
 
 
-interface DiageRecord
+interface DiagRecord
 {
 
     public function getId():int;
