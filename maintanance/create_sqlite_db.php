@@ -1,10 +1,9 @@
 <?php
 
+require_once __DIR__.'/../bootstrap.php';
 
-
-require_once __DIR__.'/../vendor/autoload.php';
 shell_exec("touch ./../db.sqlite");
-$pdo = new \PDO('sqlite:./../db.sqlite');
+//$pdo = new \PDO('sqlite:./../db.sqlite');
 $pdo->exec("
 CREATE TABLE table_log
 (
