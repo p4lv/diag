@@ -3,11 +3,12 @@
 namespace Diag;
 
 
-class Record
+class Record implements DiagRecord
 {
     protected $id;
     protected $message;
     protected $object;
+    protected $createdAt;
     protected $eventType;
     protected $severity;
     protected $projectId;
@@ -17,6 +18,8 @@ class Record
     {
         $this->version = $data['version'] ?? 0;
 
+        $this->createdAt = $data['createdAt'] ?? $data['created_at'] ?? date('Y-m-d H:i:s');
+
         $this->id = $data['id'] ?? null;
         $this->message = $data['message'] ?? '';
         $this->object = $data['object'] ?? null;
@@ -25,7 +28,7 @@ class Record
         $this->projectId = $data['projectId'] ?? $data['project_id'] ?? 0;
     }
 
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
@@ -33,7 +36,7 @@ class Record
     /**
      * @return mixed
      */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
@@ -49,6 +52,10 @@ class Record
     public function getType()
     {
         return (string)$this->eventType;
+    }
+    public function getEventType(): string
+    {
+        return $this->getType();
     }
 
     public function getSeverity()
@@ -67,13 +74,22 @@ class Record
             'message' => $this->getMessage(),
             'severity' => $this->getSeverity(),
             'eventType' => $this->getType(),
+            'createdAt' => $this->getCreatedAt(),
             'projectId' => $this->getProjectId(),
             'version' => $this->getVersion(),
         ];
     }
 
-    private function getVersion()
+    public function getVersion()
     {
         return $this->version;
+    }
+
+    /**
+     * @return false|mixed|string
+     */
+    public function getCreatedAt()
+    {
+        return $this->createdAt;
     }
 }

@@ -22,7 +22,7 @@ class RecordTest extends TestCase
         self::assertTrue(is_array($record->toArray()));
         self::assertEquals($record->getSeverity(), Severity::LOG);
         self::assertEquals(
-            ['message' => '', 'severity' => Severity::LOG, 'eventType' => 'general', 'projectId' => 0, 'version' => 0],
+            ['message' => '', 'severity' => Severity::LOG, 'eventType' => 'general', 'projectId' => 0, 'version' => 0, 'createdAt'=>date('Y-m-d H:i:s')],
             $record->toArray()
         );
     }
@@ -34,6 +34,7 @@ class RecordTest extends TestCase
             'severity' => Severity::CRITICAL,
             'eventType' => 'new',
             'projectId' => 42,
+            'createdAt' => date('Y-m-d H:i:s'),
             'version' => 7
         ];
 
