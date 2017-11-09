@@ -15,15 +15,14 @@ class Record
 
     public function __construct(array $data = [])
     {
-        $this->version = 0;
-        foreach ($data as $k => $v) {
-            if(property_exists($this, $k)) {
-                // use setters or direct inserting with post validation ?
-                $this->{$k} = $v;
-            }
-        }
+        $this->version = $data['version'] ?? 0;
 
-        //todo: add rules for validations... ??
+        $this->id = $data['id'] ?? null;
+        $this->message = $data['message'] ?? '';
+        $this->object = $data['object'] ?? null;
+        $this->eventType = $data['event'] ?? $data['eventType'] ?? 'general';
+        $this->severity = $data['severity'] ?? Severity::LOG;
+        $this->projectId = $data['projectId'] ?? $data['project_id'] ?? 0;
     }
 
     public function getId()
@@ -39,22 +38,9 @@ class Record
         return $this->message;
     }
 
-    /**
-     * @param mixed $message
-     */
-    public function setMessage($message)
-    {
-        $this->message = $message;
-    }
-
     public function getObject()
     {
         return $this->object;
-    }
-
-    public function setObject($object)
-    {
-        $this->object = $object;
     }
 
     /**
@@ -65,19 +51,9 @@ class Record
         return (string)$this->eventType;
     }
 
-    public function setType(string $eventType)
-    {
-        $this->eventType = $eventType;
-    }
-
     public function getSeverity()
     {
         return (int)$this->severity;
-    }
-
-    public function setSeverity(int $severity)
-    {
-        $this->severity = $severity;
     }
 
     public function getProjectId()
@@ -94,16 +70,6 @@ class Record
             'projectId' => $this->getProjectId(),
             'version' => $this->getVersion(),
         ];
-    }
-
-    /**
-     * @param mixed $version
-     * @return Record
-     */
-    public function setVersion(int $version)
-    {
-        $this->version = $version;
-        return $this;
     }
 
     private function getVersion()

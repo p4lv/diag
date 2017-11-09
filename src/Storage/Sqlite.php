@@ -68,7 +68,10 @@ NULL,
         $stm->bindParam(':id', $id);
 
         $stm->execute();
-        return $stm->fetchObject(Record::class);
+//        return $stm->fetchObject(Record::class);
+        $row = $stm->fetch(\PDO::FETCH_ASSOC);
+
+        return new Record($row);
     }
 
     public function search(array $filters): array
