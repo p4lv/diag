@@ -4,17 +4,18 @@ namespace Diag\Command;
 
 use Diag\Config;
 use Diag\Storage\CanCleanUp;
+use Diag\Storage\CanSetUp;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanUpCommand extends Command
+class SetUpCommand extends Command
 {
     protected function configure()
     {
         $this
-            ->setName('maintenance:clean-up')
+            ->setName('maintenance:set-up')
             ->addOption(
                 'storage',
                 's',
@@ -22,14 +23,6 @@ class CleanUpCommand extends Command
                 'storage engine to use',
                 getenv('DIAG_DEFAULT_STORAGE')
             )
-            ->addOption(
-                'now',
-                null,
-                InputArgument::OPTIONAL,
-                'time string to use as now',
-                null
-            )
-
         ;
     }
 
@@ -47,18 +40,12 @@ class CleanUpCommand extends Command
         }
 
         $storage = new $storageClassName($config);
-        if (!($storage instanceof CanCleanUp)) {
-            $output->writeln('storage does not support clean up');
+        if (!($storage instanceof CanSetUp)) {
+            $output->writeln('storage does not support set up');
             return 1;
         }
-        $output->writeln('cleaning up...');
-
-        if ($storage->cleanup(
-            $input->getOption('now') ? new \DateTime($input->getOption('now')) : null
-            )) {
-            $output->writeln('clean up successful');
-        } else {
-            $output->writeln('clean up failed');
-        }
+        $output->writeln('setting up...');
+        $storage->setup();
+        $output->writeln('set up successful');
     }
 }

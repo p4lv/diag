@@ -121,7 +121,7 @@ version
         return true;
     }
 
-    public function cleanup(\DateTime $now = null)
+    public function cleanup(\DateTime $now = null) : bool
     {
         if ($now === null) {
             $now = new \DateTime();
@@ -141,12 +141,11 @@ version
         );
     }
 
-    public function setup()
+    public function setup() : bool
     {
-        $this->engine->exec("DROP TABLE IF EXISTS table_log");
-        return
-            $this->engine->exec("
-CREATE TABLE table_log
+        $this->engine->exec("DROP TABLE IF EXISTS {$this->logTable}");
+        $this->engine->exec("
+CREATE TABLE {$this->logTable}
 (
   id        INTEGER PRIMARY KEY AUTOINCREMENT,
   message   TEXT,
@@ -156,8 +155,9 @@ CREATE TABLE table_log
   projectId INT,
   version   INT
 );
-CREATE UNIQUE INDEX table_log_id_uindex
-  ON table_log (id);
+CREATE UNIQUE INDEX {$this->logTable}_id_uindex
+  ON {$this->logTable} (id);
 ");
+        return true;
     }
 }
