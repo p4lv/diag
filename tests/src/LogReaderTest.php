@@ -2,6 +2,7 @@
 
 namespace Tests\Diag;
 
+use Diag\Config;
 use Diag\DataMapper;
 use Diag\LogReader;
 use Diag\Record;
@@ -10,43 +11,17 @@ use PHPUnit\Framework\TestCase;
 
 class LogReaderTest extends TestCase
 {
-
-    /** @var  \PDO */
-    protected $pdo;
+    protected $sqlite;
 
     public function setUp()
     {
-        static $pdo = null;
-
-//        var_dump(getenv('dsn'));
-
-        if($pdo === null) {
-            $pdo = new \PDO(getenv('dsn'));
-            $pdo->exec("
-CREATE TABLE table_log
-(
-  id        INTEGER,
-  message   TEXT,
-  severity  INTEGER,
-  eventType TEXT,
-  projectId INT,
-  createdAt TEXT,
-  version   INT
-);
-CREATE UNIQUE INDEX table_log_id_uindex
-  ON table_log (id);
-");
-        }
-
-        $this->pdo = $pdo;
-
-
+        $this->sqlite = new Sqlite(new Config());
+        $this->sqlite->setup();
     }
 
     public function testReader()
     {
-        $sqlite = new Sqlite($this->pdo);
-        $reader = new LogReader($sqlite);
+        $reader = new LogReader($this->sqlite);
 
         $result = $reader->getLast(10);
 
@@ -67,21 +42,16 @@ CREATE UNIQUE INDEX table_log_id_uindex
 
         $result = $reader->getLast(15);
         static::assertCount(15, $result);
-
-
-
-
-//        var_dump($result);
     }
 
     private function addStubData($count = 10)
     {
-        $mapper = new DataMapper(new Sqlite($this->pdo));
+        $mapper = new DataMapper(new Sqlite(new Config()));
         for($i = 0; $i < $count ; $i++) {
             $record = new Record(
                 [
                     'id' => $i,
-                    'message' => file_get_contents('https://baconipsum.com/api/?type=meat-and-filler'),
+                    'message' => file_get_contents('https://baconipsum.com/api/?type=meat-and-filler') ?? 'default message',
                     'eventType' => 'test',
                 ]
             );

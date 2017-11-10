@@ -2,7 +2,7 @@
 
 require_once __DIR__.'/../bootstrap.php';
 
-$sqlite = new \Diag\Storage\Sqlite($pdo);
+$sqlite = new \Diag\Storage\Sqlite(new \Diag\Config());
 $dataMapper = new \Diag\DataMapper($sqlite);
 
 $record = new \Diag\Record($_POST);
