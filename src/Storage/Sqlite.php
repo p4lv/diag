@@ -2,20 +2,25 @@
 
 namespace Diag\Storage;
 
+use Diag\Config;
 use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
 use Diag\Record;
 
-class Sqlite implements CanPersist, CanFetch
+class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 {
+    const STORAGE = 'Sqlite';
+
     private $engine;
+    private $cleanupInterval;
     private $logTable;
 
-    public function __construct(\PDO $engine, $logTable = 'table_log')
+    public function __construct(Config $config)
     {
-        $this->engine = $engine;
+        $this->engine = new \PDO('sqlite:' . $config->getStorage(self::STORAGE)['database']);
         $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->logTable = $logTable;
+        $this->logTable = $config->getStorage(self::STORAGE)['log_table'];
+        $this->cleanupInterval = $config->getStorage(self::STORAGE)['cleanup_interval'];
     }
 
     public function last($numberOfElements = 10, ?int $beforeId = null): array
@@ -41,7 +46,6 @@ from {$this->logTable} ";
     {
 
         $sql = "insert into {$this->logTable} (
-id,
 message,
 severity,
 eventType,
@@ -49,7 +53,6 @@ projectId,
 createdAt,
 version
 ) VALUES (
-NULL,
 :message,
 :severity,
 :eventType,
@@ -116,5 +119,45 @@ NULL,
         }
 
         return true;
+    }
+
+    public function cleanup(\DateTime $now = null)
+    {
+        if ($now === null) {
+            $now = new \DateTime();
+        }
+        $stm = $this->engine->prepare(
+            "
+                DELETE FROM {$this->logTable}
+                WHERE createdAt < :cleanUpFromDate
+            "
+        );
+        return $stm->execute(
+            [
+                'cleanUpFromDate' => (clone $now)
+                                        ->add(new \DateInterval($this->cleanupInterval))
+                                        ->format('Y-m-d H:i:s')
+            ]
+        );
+    }
+
+    public function setup()
+    {
+        $this->engine->exec("DROP TABLE IF EXISTS table_log");
+        return
+            $this->engine->exec("
+CREATE TABLE table_log
+(
+  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  message   TEXT,
+  severity  INTEGER,
+  eventType TEXT,
+  createdAt TEXT,
+  projectId INT,
+  version   INT
+);
+CREATE UNIQUE INDEX table_log_id_uindex
+  ON table_log (id);
+");
     }
 }

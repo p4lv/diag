@@ -8,6 +8,7 @@
 
 namespace Tests\Diag\Storage;
 
+use Diag\Config;
 use Diag\Record;
 use Diag\Severity;
 use Diag\Storage\CanPersist;
@@ -16,44 +17,18 @@ use PHPUnit\Framework\TestCase;
 
 class SqliteTest extends TestCase
 {
-
-    /** @var  \PDO */
-    protected $pdo;
+    /** @var  Sqlite */
+    protected $sqlite;
 
     public function setUp()
     {
-        static $pdo = null;
-
-//        var_dump(getenv('dsn'));
-
-        if($pdo === null) {
-            $pdo = new \PDO(getenv('dsn'));
-            $pdo->exec("
-CREATE TABLE table_log
-(
-  id        INTEGER,
-  message   TEXT,
-  severity  INTEGER,
-  eventType TEXT,
-  projectId INT,
-  createdAt TEXT,
-  version   INT
-);
-CREATE UNIQUE INDEX table_log_id_uindex
-  ON table_log (id);
-");
-        }
-
-
-
-
-        $this->pdo = $pdo;
+        $this->sqlite = new Sqlite(new Config());
+        $this->sqlite->setup();
     }
-
 
     public function testStore()
     {
-        $sqlite = new Sqlite($this->pdo);
+        $sqlite = $this->sqlite;
 
         static::assertInstanceOf(CanPersist::class, $sqlite);
 
