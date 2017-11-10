@@ -3,10 +3,10 @@
 require_once __DIR__.'/../bootstrap.php';
 
 $sqlite = new \Diag\Storage\Sqlite($pdo);
-$dataMapepr = new \Diag\DataMapper($sqlite);
+$dataMapper = new \Diag\DataMapper($sqlite);
 
 $record = new \Diag\Record($_POST);
-$result = $dataMapepr->store($record);
+$result = $dataMapper->store($record);
 
 if($result) {
     $response = new \Diag\DiagResponse('ok', 200);
