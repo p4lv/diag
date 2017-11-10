@@ -20,7 +20,7 @@ class Sqlite implements CanPersist, CanFetch
 
     public function last($numberOfElements = 10, ?int $beforeId = null): array
     {
-        $sql = "select id, message, severity, eventType, projectId, version
+        $sql = "select id, message, severity, eventType, projectId, createdAt, version
 from {$this->logTable} ";
 
         if ($beforeId) {
@@ -64,7 +64,7 @@ NULL,
 
     public function get($id): DiagRecord
     {
-        $sql = "select id, message, severity, eventType, projectId, version from "
+        $sql = "select id, message, severity, eventType, projectId, createdAt, version from "
             . $this->logTable
             . " where id = :id";
         $stm = $this->engine->prepare($sql);
