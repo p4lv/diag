@@ -35,7 +35,7 @@ class RecordTest extends TestCase
             'eventType' => 'new',
             'projectId' => 42,
             'createdAt' => date('Y-m-d H:i:s'),
-            'version' => 7
+            'version' => 7,
         ];
 
         $record = new Record($preset);

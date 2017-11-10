@@ -46,6 +46,7 @@ message,
 severity,
 eventType,
 projectId,
+createdAt,
 version
 ) VALUES (
 NULL,
@@ -53,6 +54,7 @@ NULL,
 :severity,
 :eventType,
 :projectId,
+:createdAt,
 :version
 )";
         $stm = $this->engine->prepare($sql);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <phpunit colors="true" bootstrap="tests/bootstrap.php">
-    <env name="DB_CONNECTION" value="sqlite"/>
+    <!--<env name="dsn" value="sqlite:memory:"/>-->
     <testsuites>
         <testsuite name="Initial tests">
             <directory>tests/</directory>
