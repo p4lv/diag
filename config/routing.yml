@@ -1,0 +1,33 @@
+root:
+    path: /
+    defaults:
+        controller: Diag\Controller\Landing
+        action: index
+    methods: [GET, POST]
+#
+#section:
+#    path: /{controller}{slash}
+#    defaults:
+#        action: index
+#    requirements:
+#        id: "[1-9][0-9]*"
+#        slash: "[/]{0,1}"
+#    methods: [GET, POST]
+#
+#item:
+#    path: /{controller}/{id}{slash}
+#    defaults:
+#        action: index
+#    requirements:
+#        id: "[1-9][0-9]*"
+#        slash: "[/]{0,1}"
+#    methods: [GET, POST]
+#
+#item-action:
+#    path: /{controller}/{id}/{action}{slash}
+#    defaults:
+#        action: index
+#    requirements:
+#        id: "[1-9][0-9]*"
+#        slash: "[/]{0,1}"
+#    methods: [GET, POST]
