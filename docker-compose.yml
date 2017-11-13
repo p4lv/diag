@@ -12,6 +12,10 @@ services:
       image: redis:alpine
       container_name: diag2017-redis
 
+    clickhouse:
+      image: yandex/clickhouse-server:latest
+      container_name: diag2017-clickhouse
+
     mariadb:
       image: mariadb:10.1
       container_name: diag2017-mariadb
