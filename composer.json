@@ -27,6 +27,7 @@
         "php": "^7.1",
         "symfony/dependency-injection": "^3.3",
         "symfony/console": "v3.3.10",
-        "symfony/yaml": "v3.3.11"
+        "symfony/yaml": "v3.3.11",
+        "bozerkins/clickhouse-client": "^0.1.3"
     }
 }

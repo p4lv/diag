@@ -4,7 +4,9 @@ storage:
     log_table: table_log
     cleanup_interval: 'P1M'
   Clickhouse:
-    host: 127.0.0.1:8123
+    host: 127.0.0.1
+    port: 5188
     database: default
     user: default
     password: ''
+    log_table: table_log
