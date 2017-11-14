@@ -2,6 +2,7 @@
     "name": "pmx/diag",
     "description": "Diagnostic messages storage engine",
     "type": "project",
+    "minimum-stability": "dev",
     "license": "MIT",
     "authors": [
         {
@@ -25,9 +26,13 @@
     },
     "require": {
         "php": "^7.1",
-        "symfony/dependency-injection": "^3.3",
-        "symfony/console": "v3.3.10",
-        "symfony/yaml": "v3.3.11",
+        "ext-pdo": "*",
+        "symfony/http-foundation": "^4.0",
+        "symfony/dependency-injection": "^4.0",
+        "symfony/config": "^4.0",
+        "symfony/yaml": "^4.0",
+        "symfony/routing": "^4.0",
+        "symfony/console": "*",
         "bozerkins/clickhouse-client": "^0.1.3"
     }
 }

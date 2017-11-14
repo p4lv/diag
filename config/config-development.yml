@@ -1,0 +1,30 @@
+imports:
+    - { resource: parameters/development/database.php }
+    - { resource: config-common.yml }
+
+parameters:
+  storage:
+    sqlite:
+      database: :memory:
+      log_table: table_log
+      cleanup_interval: 'P1M'
+    clickhouse:
+      host: 127.0.0.1
+      port: 5188
+      database: default
+      user: default
+      password: ''
+      log_table: table_log'
+
+
+#properties:
+#    storage:
+#      Sqlite:
+#        database: /tmp/default.sqlite
+#        log_table: table_log
+#        cleanup_interval: 'P1M'
+#      Clickhouse:
+#        host: 127.0.0.1:8123
+#        database: default
+#        user: default
+#        password: ''

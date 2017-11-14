@@ -6,14 +6,9 @@ namespace Diag\Controller;
 use Diag\DiagRecord;
 use Diag\DiagRecordIterator;
 use Diag\DiagResponse;
-use Diag\Storage\CanPersist;
 
 class Api
 {
-    public function __construct(CanPersist $storage)
-    {
-    }
-
     public function getList(array $filters)
     {
     }
