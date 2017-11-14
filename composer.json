@@ -32,6 +32,7 @@
         "symfony/config": "^4.0",
         "symfony/yaml": "^4.0",
         "symfony/routing": "^4.0",
-        "symfony/console": "*"
+        "symfony/console": "*",
+        "bozerkins/clickhouse-client": "^0.1.3"
     }
 }

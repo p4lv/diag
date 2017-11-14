@@ -47,5 +47,6 @@ ClickHouse|clickhouse|9000 (HTTP default)
         * Shell into the PHP container, `docker-compose exec php-fpm bash`
         * Run symfony console, `docker-compose exec php-fpm bin/console`
         * Open a mysql shell, `docker-compose exec mysql mysql -uroot -pCHOSEN_ROOT_PASSWORD`
+  * Connect to clickhouse client `docker-compose exec --user="root" clickhouse clickhouse --client`
 
 

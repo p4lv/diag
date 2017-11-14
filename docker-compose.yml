@@ -12,6 +12,12 @@ services:
       image: redis:alpine
       container_name: diag2017-redis
 
+    clickhouse:
+      image: yandex/clickhouse-server:latest
+      container_name: diag2017-clickhouse
+      ports:
+        - "5188:8123"
+
     mariadb:
       image: mariadb:10.1
       container_name: diag2017-mariadb
