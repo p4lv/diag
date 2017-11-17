@@ -2,8 +2,6 @@
 
 namespace Diag\Command;
 
-use Diag\Config;
-use Diag\Storage\CanCleanUp;
 use Diag\Storage\CanSetUp;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
