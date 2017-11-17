@@ -4,7 +4,6 @@
 namespace Diag\Storage;
 
 use ClickhouseClient\Client\Client as ClickhouseClient;
-use Diag\Config;
 use Diag\DiagRecord;
 use Diag\Record;
 

@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: r.shvets
- * Date: 10/11/2017
- * Time: 12:31
- */
 
 namespace Tests\Diag\Storage;
 
-use Diag\Config;
 use Diag\Record;
 use Diag\Severity;
 use Diag\Storage\CanPersist;

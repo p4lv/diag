@@ -28,18 +28,15 @@ class SetUpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = new Config();
+        global $container;
+        $storagename = ucfirst(strtolower($input->getOption('storage')));
+        $storageClassName = 'Diag\\Storage\\' . $storagename;
 
-        $storageClassName = '\\Diag\\Storage\\' . $input->getOption('storage');
-        if (
-            !preg_match('/^[a-z]+$/i', $input->getOption('storage')) ||
-            !$config->hasStorage($input->getOption('storage')) ||
-            !class_exists($storageClassName)
-        ) {
+        if (!class_exists($storageClassName)) {
             throw new \RuntimeException('storage not supported');
         }
 
-        $storage = new $storageClassName($config);
+        $storage = $container->get($storageClassName);
         if (!($storage instanceof CanSetUp)) {
             $output->writeln('storage does not support set up');
             return 1;

@@ -2,7 +2,6 @@
 
 namespace Tests\Diag;
 
-use Diag\Config;
 use Diag\DataMapper;
 use Diag\LogReader;
 use Diag\Record;

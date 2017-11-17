@@ -51,6 +51,9 @@ foreach ($parameters as $key => $value) {
 
 $command = $request->getMethod() . $request->get('action');
 
+//dump($container->get(Diag\Storage\Sqlite::class))
+//;
+//dump(new Diag\Storage\Sqlite);
 
 try {
     $controller = $container->get($request->get('controller'));

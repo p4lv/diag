@@ -2,7 +2,6 @@
 
 namespace Diag\Storage;
 
-use Diag\Config;
 use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
 use Diag\Record;
@@ -10,6 +9,8 @@ use Diag\Record;
 class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 {
     const STORAGE = 'Sqlite';
+
+
 
     private $engine;
     private $cleanupInterval;

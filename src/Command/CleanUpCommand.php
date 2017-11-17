@@ -2,14 +2,13 @@
 
 namespace Diag\Command;
 
-use Diag\Config;
 use Diag\Storage\CanCleanUp;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanUpCommand extends Command
+class CleanUpCommand extends Command//ContainerAwareCommand
 {
     protected function configure()
     {
@@ -35,18 +34,13 @@ class CleanUpCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $config = new Config();
-
-        $storageClassName = '\\Diag\\Storage\\' . $input->getOption('storage');
-        if (
-            !preg_match('/^[a-z]+$/i', $input->getOption('storage')) ||
-            !$config->hasStorage($input->getOption('storage')) ||
-            !class_exists($storageClassName)
-        ) {
+        global $container;
+        $storageClassName = 'Diag\\Storage\\' . $input->getOption('storage');
+        if (!class_exists($storageClassName)) {
             throw new \RuntimeException('storage not supported');
         }
 
-        $storage = new $storageClassName($config);
+        $storage = $container->get($storageClassName);
         if (!($storage instanceof CanCleanUp)) {
             $output->writeln('storage does not support clean up');
             return 1;

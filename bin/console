@@ -3,11 +3,37 @@
 
 require __DIR__.'/../vendor/autoload.php';
 
+
+use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\DelegatingLoader;
+use Symfony\Component\Config\Loader\LoaderResolver;
+use Symfony\Component\DependencyInjection;
+
 use Symfony\Component\Console\Application;
 use Diag\Command\CleanUpCommand;
 use Diag\Command\SetUpCommand;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
+
+
+$locator = new FileLocator(__DIR__ . '/config');
+
+// DI container
+$container = new DependencyInjection\ContainerBuilder;
+$resolver = new LoaderResolver(
+    [
+        new YamlFileLoader($container, $locator),
+        new PhpFileLoader($container, $locator),
+    ]
+);
+$loader = new DelegatingLoader($resolver);
+$loader->load(__DIR__.'/../config/config-development.yml');
+
+$container->compile();
+
 
 $application = new Application();
+
 
 $application->add(new CleanUpCommand);
 $application->add(new SetUpCommand);

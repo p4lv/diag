@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: r.shvets
- * Date: 09/11/2017
- * Time: 23:30
- */
 
 namespace Tests\Diag;
 
