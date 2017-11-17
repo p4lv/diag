@@ -6,17 +6,23 @@ namespace Diag\Controller;
 use Diag\DataMapper;
 use Diag\LogReader;
 use Diag\Record;
-use Diag\Storage\Clickhouse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class Api
 {
+    private $container;
+
+    public function setContainer(\Psr\Container\ContainerInterface $container)
+    {
+        $this->container = $container;
+    }
+
     public function getList(Request $request): JsonResponse
     {
-
-        $dataReader = new LogReader(new \Diag\Storage\Clickhouse);
-
+        /** @var LogReader $dataReader */
+        $dataReader = $this->container->get(LogReader::class);
         $data = $dataReader->getLast($request->get('limit', 10));
         $response = new JsonResponse($data);
         return $response;
@@ -27,7 +33,8 @@ class Api
         $dataMapper = new DataMapper(new \Diag\Storage\Clickhouse);
         $dataMapper->store($request->request->all());
 
-        $response = new JsonResponse($record->toArray());
+        $response = new JsonResponse(['status'=>'ok']);
+//        $response = new JsonResponse($record->toArray());
         return $response;
     }
 
