@@ -54,7 +54,8 @@ $command = $request->getMethod() . $request->get('action');
 
 try {
     $controller = $container->get($request->get('controller'));
-    $resposne = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => 'Unknown error'], 500);
+    $response = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => 'Unknown error'], 500);
+
 } catch (\Exception $exception) {
     $data = [
         'status' => 'error',

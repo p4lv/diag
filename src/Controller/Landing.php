@@ -3,13 +3,13 @@
 namespace Diag\Controller;
 
 
-use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Symfony\Component\HttpFoundation\Response;
 
 class Landing
 {
 
     public function getIndex()
     {
-        return new ResponseHeaderBag('New DiAg is hErE! ');
+        return new Response('New DiAg is hErE! ');
     }
 }
