@@ -19,7 +19,7 @@ class CleanUpCommand extends Command//ContainerAwareCommand
                 's',
                 InputArgument::OPTIONAL,
                 'storage engine to use',
-                getenv('DIAG_DEFAULT_STORAGE')
+                'Sqlite'
             )
             ->addOption(
                 'now',
@@ -27,9 +27,7 @@ class CleanUpCommand extends Command//ContainerAwareCommand
                 InputArgument::OPTIONAL,
                 'time string to use as now',
                 null
-            )
-
-        ;
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -49,7 +47,7 @@ class CleanUpCommand extends Command//ContainerAwareCommand
 
         if ($storage->cleanup(
             $input->getOption('now') ? new \DateTime($input->getOption('now')) : null
-            )) {
+        )) {
             $output->writeln('clean up successful');
         } else {
             $output->writeln('clean up failed');

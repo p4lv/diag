@@ -33,7 +33,7 @@ class Api
         $dataMapper = new DataMapper(new \Diag\Storage\Clickhouse);
         $dataMapper->store($request->request->all());
 
-        $response = new JsonResponse(['status'=>'ok']);
+        $response = new JsonResponse(['status' => 'ok']);
 //        $response = new JsonResponse($record->toArray());
         return $response;
     }
@@ -51,7 +51,7 @@ class Api
 
     public function getRecord(Request $request): JsonResponse
     {
-        $dataReader = new LogReader(new \Diag\Storage\Clickhouse);
+        $dataReader = $this->container->get(LogReader::class);
         $response = new JsonResponse($dataReader->get($request->get('id')));
         return $response;
     }

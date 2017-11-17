@@ -21,9 +21,8 @@ class SetUpCommand extends Command
                 's',
                 InputArgument::OPTIONAL,
                 'storage engine to use',
-                getenv('DIAG_DEFAULT_STORAGE')
-            )
-        ;
+                'Sqlite'
+            );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

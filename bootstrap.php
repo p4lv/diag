@@ -51,10 +51,6 @@ foreach ($parameters as $key => $value) {
 
 $command = $request->getMethod() . $request->get('action');
 
-//dump($container->get(Diag\Storage\Sqlite::class))
-//;
-//dump(new Diag\Storage\Sqlite);
-
 try {
     $controller = $container->get($request->get('controller'));
     $controller->setContainer($container);
@@ -63,13 +59,13 @@ try {
 } catch (\Exception $exception) {
     $data = [
         'status' => 'error',
-        'message' => $exception->getMessage(),
+        'message' => $exception->getMessage()
     ];
     $response = new JsonResponse($data);
 
 } catch (\TypeError $error) {
     $data = [
-        'status' => 'error',
+        'status' => 'fatal',
         'message' => $error->getMessage(),
     ];
     $response = new JsonResponse($data);

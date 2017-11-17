@@ -21,3 +21,5 @@ services:
     Diag\Storage\Sqlite:
       arguments: ['@pdo', 'log_table']
 
+    Diag\LogReader:
+      arguments: ['%log.reader.storage%']
