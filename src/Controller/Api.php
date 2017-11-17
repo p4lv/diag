@@ -4,11 +4,11 @@ namespace Diag\Controller;
 
 
 use Diag\DataMapper;
+use Diag\DiagResponse;
 use Diag\LogReader;
 use Diag\Record;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 
 class Api
 {
@@ -51,8 +51,10 @@ class Api
 
     public function getRecord(Request $request): JsonResponse
     {
+        $id = $request->get('id');
         $dataReader = $this->container->get(LogReader::class);
-        $response = new JsonResponse($dataReader->get($request->get('id')));
+
+        $response = new DiagResponse($dataReader->get($id));
         return $response;
     }
 }
