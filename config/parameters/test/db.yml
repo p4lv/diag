@@ -1,0 +1,9 @@
+parameters:
+  clickhouse.host: 127.0.0.1
+  clickhouse.port: 8123
+  clickhouse.database: default
+  clickhouse.user: default
+  clickhouse.password: ''
+
+  sqlite.dsn: sqlite::memory:
+  sqlite.cleanup_interval: 'P1M'

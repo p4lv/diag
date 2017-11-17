@@ -1,0 +1,18 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: true
+
+    ClickhouseClient\Client\:
+            resource: '../vendor/bozerkins/clickhouse-client/src/ClickhouseClient/Client'
+#            exclude: '../vendor/bozerkins/clickhouse-client/src/ClickhouseClient/{Connector,Exception, Client/Format, /*}'
+
+    ClickhouseClient\Client\Config:
+      arguments:
+        - 'host': '%clickhouse.host%'
+          'port': '%clickhouse.port%'
+          'protocol': 'http'
+        - 'database': '%clickhouse.database%'
+        - 'user': '%clickhouse.user%'
+          'password': '%clickhouse.password%'

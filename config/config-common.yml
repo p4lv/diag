@@ -7,3 +7,17 @@ services:
 
     Diag\Controller\:
             resource: '../src/Controller/*'
+
+
+
+
+    Diag\Storage\Clickhouse:
+      arguments:
+        $logTable: 'log_table'
+    pdo:
+      class: \PDO
+      arguments: ['%database.dsn%']
+
+    Diag\Storage\Sqlite:
+      arguments: ['@pdo', 'log_table']
+

@@ -1,19 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: r.shvets
- * Date: 12/11/2017
- * Time: 00:48
- */
 
 namespace Diag\Controller;
 
+
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 
 class Landing
 {
 
     public function getIndex()
     {
-        echo "test";
+        return new ResponseHeaderBag('New DiAg is hErE! ');
     }
 }

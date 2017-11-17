@@ -1,43 +1,23 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bogdans
- * Date: 11/13/17
- * Time: 11:38 PM
- */
+
 
 namespace Diag\Storage;
 
 use ClickhouseClient\Client\Client as ClickhouseClient;
-use ClickhouseClient\Client\Config as ClickhouseClientConfig;
 use Diag\Config;
 use Diag\DiagRecord;
 use Diag\Record;
 
 class Clickhouse implements CanPersist, CanFetch, CanSetUp
 {
-    const STORAGE = 'Clickhouse';
-
-    /** @var  ClickhouseClient */
     private $client;
     /** @var  string */
     private $logTable;
 
-    public function __construct(Config $config)
+    public function __construct(ClickhouseClient $client, $logTable = 'log_table')
     {
-        $options = $config->getStorage(self::STORAGE);
-        $config = new ClickhouseClientConfig(
-            // basic connection information
-            ['host' => $options['host'], 'port' => $options['port'], 'protocol' => 'http'],
-            // settings
-            ['database' => $options['database']],
-            // credentials
-            ['user' => $options['user'], 'password' => $options['password']],
-            // additional CURL options
-            [ CURLOPT_TIMEOUT => 30 ]
-        );
-        $this->client = new ClickhouseClient($config);
-        $this->logTable = $options['log_table'];
+        $this->client = $client;
+        $this->logTable = $logTable;
     }
 
     public function get($id): DiagRecord
@@ -64,7 +44,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
         $response = $this->client->query($sql);
         $records = $response->getContent()['data'];
-//        return array_map(function(array $record) { return new Record($record); }, $records);
+
         return $records;
     }
 
@@ -96,6 +76,8 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
     public function setup(): bool
     {
+
+        dump($this->client);
         try {
             $this->client->system("DROP TABLE IF EXISTS {$this->logTable}");
             $this->client->system("

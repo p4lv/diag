@@ -33,7 +33,12 @@ $loader->load('config-development.yml');
 
 $container->compile();
 
+/** @var \Diag\Storage\Clickhouse $clickhouse */
+$clickhouse = $container->get(\Diag\Storage\Clickhouse::class);
 
+dump($clickhouse->setup());
+
+exit;
 // routing
 $loader = new Routing\Loader\YamlFileLoader($locator);
 $context = new Routing\RequestContext();
@@ -54,28 +59,23 @@ $command = $request->getMethod() . $request->get('action');
 
 
 try {
-//    dump($request->get('controller'));
-//    exit;
-
     $controller = $container->get($request->get('controller'));
-//dump($controller);exit;
-    $data = $controller->{$command}($request) ?? [];
-    $data = ['status' => 'ok'] + $data;
+    $resposne = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => 'Unknown error'], 500);
 } catch (\Exception $exception) {
     $data = [
         'status' => 'error',
         'message' => $exception->getMessage(),
     ];
+    $resposne = new JsonResponse($data);
+
 } catch (\TypeError $error) {
     $data = [
         'status' => 'error',
-        'message' => 'Invalid dependency',
+        'message' => $error->getMessage(),
     ];
+    $resposne = new JsonResponse($data);
 }
 
-
-var_dump($data);
-//$name = $request->get('view');
-//$view = $container->get($name);
-//$response = $view->{$command}($data) ?? new Response;
-//$response->send();
+if($response instanceof Response)  {
+    $response->send();
+}

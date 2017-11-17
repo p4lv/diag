@@ -15,12 +15,12 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
     private $cleanupInterval;
     private $logTable;
 
-    public function __construct(Config $config)
+    public function __construct(\PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
-        $this->engine = new \PDO('sqlite:' . $config->getStorage(self::STORAGE)['database']);
+        $this->engine = $engine;
         $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->logTable = $config->getStorage(self::STORAGE)['log_table'];
-        $this->cleanupInterval = $config->getStorage(self::STORAGE)['cleanup_interval'];
+        $this->logTable = $logTable;
+        $this->cleanupInterval = $cleanupInterval;
     }
 
     public function last($numberOfElements = 10, ?int $beforeId = null): array
