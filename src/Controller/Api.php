@@ -30,7 +30,7 @@ class Api
 
     public function postRecords(Request $request): JsonResponse
     {
-        $dataMapper = new DataMapper(new \Diag\Storage\Clickhouse);
+        $dataMapper = $this->container->get(DataMapper::class);
         $dataMapper->store($request->request->all());
 
         $response = new JsonResponse(['status' => 'ok']);
@@ -42,7 +42,7 @@ class Api
     {
         $record = new Record($request->request->all());
 
-        $dataMapper = new DataMapper(new \Diag\Storage\Clickhouse);
+        $dataMapper = $this->container->get(DataMapper::class);
         $dataMapper->store($record);
 
         $response = new JsonResponse($record->toArray());

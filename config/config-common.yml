@@ -23,3 +23,6 @@ services:
 
     Diag\LogReader:
       arguments: ['%log.reader.storage%']
+
+    Diag\DataMapper:
+      arguments: ['%log.mapper.storage%']
