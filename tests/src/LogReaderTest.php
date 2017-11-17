@@ -15,7 +15,7 @@ class LogReaderTest extends TestCase
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new Config());
+        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
         $this->sqlite->setup();
     }
 
@@ -46,7 +46,7 @@ class LogReaderTest extends TestCase
 
     private function addStubData($count = 10)
     {
-        $mapper = new DataMapper(new Sqlite(new Config()));
+        $mapper = new DataMapper($this->sqlite);
         for($i = 0; $i < $count ; $i++) {
             $record = new Record(
                 [

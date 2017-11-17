@@ -22,7 +22,7 @@ class SqliteTest extends TestCase
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new Config());
+        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
         $this->sqlite->setup();
     }
 
