@@ -33,12 +33,6 @@ $loader->load('config-development.yml');
 
 $container->compile();
 
-/** @var \Diag\Storage\Clickhouse $clickhouse */
-$clickhouse = $container->get(\Diag\Storage\Clickhouse::class);
-
-dump($clickhouse->setup());
-
-exit;
 // routing
 $loader = new Routing\Loader\YamlFileLoader($locator);
 $context = new Routing\RequestContext();

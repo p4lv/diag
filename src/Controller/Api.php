@@ -13,6 +13,10 @@ class Api
 {
     public function getList(array $filters): JsonResponse
     {
+
+        /** @var \Diag\Storage\Clickhouse $clickhouse */
+        $clickhouse = $container->get(\Diag\Storage\Clickhouse::class);
+
         $response = new JsonResponse([]);
         return $response;
     }
