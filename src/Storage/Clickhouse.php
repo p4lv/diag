@@ -51,7 +51,9 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
     {
         try {
             $this->client->writeRows('INSERT INTO ' . $this->logTable,
-                array_map(function(Record $record) { return $record->toArray(); }, $data)
+                array_map(function (Record $record) {
+                    return $record->toArray();
+                }, $data)
             );
             return true;
         } catch (\Throwable $ex) {
@@ -75,8 +77,6 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
     public function setup(): bool
     {
-
-        dump($this->client);
         try {
             $this->client->system("DROP TABLE IF EXISTS {$this->logTable}");
             $this->client->system("

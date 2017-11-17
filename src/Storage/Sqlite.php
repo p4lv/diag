@@ -8,10 +8,6 @@ use Diag\Record;
 
 class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 {
-    const STORAGE = 'Sqlite';
-
-
-
     private $engine;
     private $cleanupInterval;
     private $logTable;
@@ -68,9 +64,9 @@ version
 
     public function get($id): DiagRecord
     {
-        $sql = "select id, message, severity, eventType, projectId, createdAt, version from "
+        $sql = "SELECT id, message, severity, eventType, projectId, createdAt, version FROM "
             . $this->logTable
-            . " where id = :id";
+            . " WHERE id = :id";
         $stm = $this->engine->prepare($sql);
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
 
@@ -122,7 +118,7 @@ version
         return true;
     }
 
-    public function cleanup(\DateTime $now = null) : bool
+    public function cleanup(\DateTime $now = null): bool
     {
         if ($now === null) {
             $now = new \DateTime();
@@ -136,13 +132,13 @@ version
         return $stm->execute(
             [
                 'cleanUpFromDate' => (clone $now)
-                                        ->add(new \DateInterval($this->cleanupInterval))
-                                        ->format('Y-m-d H:i:s')
+                    ->add(new \DateInterval($this->cleanupInterval))
+                    ->format('Y-m-d H:i:s')
             ]
         );
     }
 
-    public function setup() : bool
+    public function setup(): bool
     {
         $this->engine->exec("DROP TABLE IF EXISTS {$this->logTable}");
         $this->engine->exec("
