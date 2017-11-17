@@ -3,42 +3,29 @@
 namespace Diag\Command;
 
 use Diag\Storage\CanCleanUp;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class CleanUpCommand extends Command
+class CleanUpCommand extends ContainerAwareCommand
 {
     protected function configure()
     {
         $this
             ->setName('maintenance:clean-up')
             ->addOption(
-                'storage',
-                's',
-                InputArgument::OPTIONAL,
-                'storage engine to use',
-                'Sqlite'
-            )
-            ->addOption(
                 'now',
                 null,
                 InputArgument::OPTIONAL,
                 'time string to use as now',
                 null
-            );
+            )
+            ->setDescription('Clean DB');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        global $container;
-        $storageClassName = 'Diag\\Storage\\' . $input->getOption('storage');
-        if (!class_exists($storageClassName)) {
-            throw new \RuntimeException('storage not supported');
-        }
-
-        $storage = $container->get($storageClassName);
+        $storage = $this->getContainer()->get('log.mapper.storage');
         if (!($storage instanceof CanCleanUp)) {
             $output->writeln('storage does not support clean up');
             return 1;

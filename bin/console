@@ -35,7 +35,7 @@ $container->compile();
 $application = new Application();
 
 
-$application->add(new CleanUpCommand);
-$application->add(new SetUpCommand);
+$application->add((new CleanUpCommand)->setContainer($container));
+$application->add((new SetUpCommand)->setContainer($container));
 
 $application->run();
