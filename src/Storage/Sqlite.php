@@ -5,7 +5,7 @@ namespace Diag\Storage;
 use DateTimeImmutable;
 use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
-use Diag\PDO;
+use PDO;
 use Diag\Record;
 
 class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
