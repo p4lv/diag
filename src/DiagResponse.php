@@ -8,7 +8,7 @@ class DiagResponse extends JsonResponse
 {
     public function __construct($data = null, int $status = 200, array $headers = array(), bool $json = false)
     {
-        if($data instanceof DiagRecord) {
+        if ($data instanceof DiagRecord) {
             $data = $data->toArray();
         }
         parent::__construct($data, $status, $headers, $json);

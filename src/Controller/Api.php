@@ -12,6 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Api
 {
+    private $logReader;
+    private $dataMapper;
+
+    public function __construct(DataMapper $dataMapper, LogReader $logReader)
+    {
+        $this->logReader = $logReader;
+        $this->dataMapper = $dataMapper;
+    }
+
     private $container;
 
     public function setContainer(\Psr\Container\ContainerInterface $container)
@@ -21,20 +30,16 @@ class Api
 
     public function getList(Request $request): JsonResponse
     {
-        /** @var LogReader $dataReader */
-        $dataReader = $this->container->get(LogReader::class);
-        $data = $dataReader->getLast($request->get('limit', 10));
+        $data = $this->logReader->getLast($request->get('limit', 10));
         $response = new JsonResponse($data);
         return $response;
     }
 
     public function postRecords(Request $request): JsonResponse
     {
-        $dataMapper = $this->container->get(DataMapper::class);
-        $dataMapper->store($request->request->all());
-
+        $this->dataMapper->store($request->request->all());
         $response = new JsonResponse(['status' => 'ok']);
-//        $response = new JsonResponse($record->toArray());
+
         return $response;
     }
 
@@ -42,8 +47,7 @@ class Api
     {
         $record = new Record($request->request->all());
 
-        $dataMapper = $this->container->get(DataMapper::class);
-        $dataMapper->store($record);
+        $this->dataMapper->store($record);
 
         $response = new JsonResponse($record->toArray());
         return $response;
@@ -52,9 +56,8 @@ class Api
     public function getRecord(Request $request): JsonResponse
     {
         $id = $request->get('id');
-        $dataReader = $this->container->get(LogReader::class);
 
-        $response = new DiagResponse($dataReader->get($id));
+        $response = new DiagResponse($this->logReader->get($id));
         return $response;
     }
 }

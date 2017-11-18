@@ -1,7 +1,6 @@
 <?php
 
 
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 $request = Request::createFromGlobals();
 
@@ -54,12 +53,12 @@ $command = $request->getMethod() . $request->get('action');
 try {
     $controller = $container->get($request->get('controller'));
     $controller->setContainer($container);
-    $response = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => 'Unknown error'], 500);
+    $response = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => "There is no such endpoint {$controller}::{$command}."], 500);
 
 } catch (\Exception $exception) {
     $data = [
         'status' => 'error',
-        'message' => $exception->getMessage()
+        'message' => $exception->getMessage(),
     ];
     $response = new JsonResponse($data);
 
@@ -71,6 +70,4 @@ try {
     $response = new JsonResponse($data);
 }
 
-if($response instanceof Response)  {
-    $response->send();
-}
+$response->send();

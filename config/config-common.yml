@@ -14,12 +14,14 @@ services:
     Diag\Storage\Clickhouse:
       arguments:
         $logTable: 'log_table'
-    pdo:
-      class: \PDO
+    Diag\PDO:
       arguments: ['%database.dsn%']
+#      calls:
+#        - method: setAttribute
+#          arguments: [!php/const:\PDO::ATTR_ERRMODE,!php/const:\PDO::ERRMODE_EXCEPTION ]
 
     Diag\Storage\Sqlite:
-      arguments: ['@pdo', 'log_table']
+      arguments: ['@Diag\PDO', '%log.table.name%']
 
     Diag\LogReader:
       arguments: ['%log.reader.storage%']

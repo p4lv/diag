@@ -11,4 +11,6 @@ parameters:
   sqlite.cleanup_interval: 'P1M'
 
   log.reader.storage: '@Diag\Storage\Sqlite'
+  log.mapper.storage: '@Diag\Storage\Sqlite'
+  log.table.name: 'log_table'
 #  log.reader.storage: '@Diag\Storage\Clickhouse'

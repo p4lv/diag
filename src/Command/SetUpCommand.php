@@ -17,13 +17,17 @@ class SetUpCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $storage = $this->getContainer()->get('log.mapper.storage');
+        $storageClassName = $this->container->getParameter('diag.storage');
+        $storage = $this->container->get($storageClassName);
+
         if (!($storage instanceof CanSetUp)) {
             $output->writeln('storage does not support set up');
-            return 1;
+            return 10;
         }
         $output->writeln('setting up...');
         $storage->setup();
         $output->writeln('set up successful');
+
+        return 0;
     }
 }

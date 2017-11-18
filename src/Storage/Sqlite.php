@@ -2,8 +2,10 @@
 
 namespace Diag\Storage;
 
+use DateTimeImmutable;
 use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
+use Diag\PDO;
 use Diag\Record;
 
 class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
@@ -12,10 +14,9 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
     private $cleanupInterval;
     private $logTable;
 
-    public function __construct(\PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
+    public function __construct(PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
         $this->engine = $engine;
-        $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->logTable = $logTable;
         $this->cleanupInterval = $cleanupInterval;
     }
@@ -64,14 +65,14 @@ version
 
     public function get($id): DiagRecord
     {
-        $sql = "SELECT id, message, severity, eventType, projectId, createdAt, version FROM "
-            . $this->logTable
-            . " WHERE id = :id";
+        $sql = "SELECT id, message, severity, eventType, projectId, createdAt, version 
+                FROM {$this->logTable}
+                WHERE id = :id ";
         $stm = $this->engine->prepare($sql);
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
 
         $stm->execute();
-//        return $stm->fetchObject(Record::class);
+
         $row = $stm->fetch(\PDO::FETCH_ASSOC);
 
         return new Record($row);
@@ -118,10 +119,10 @@ version
         return true;
     }
 
-    public function cleanup(\DateTime $now = null): bool
+    public function cleanup(DateTimeImmutable $now = null): bool
     {
         if ($now === null) {
-            $now = new \DateTime();
+            $now = new DateTimeImmutable();
         }
         $stm = $this->engine->prepare(
             "
@@ -131,7 +132,7 @@ version
         );
         return $stm->execute(
             [
-                'cleanUpFromDate' => (clone $now)
+                'cleanUpFromDate' => $now
                     ->add(new \DateInterval($this->cleanupInterval))
                     ->format('Y-m-d H:i:s')
             ]
