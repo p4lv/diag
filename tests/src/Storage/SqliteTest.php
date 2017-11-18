@@ -1,14 +1,7 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: r.shvets
- * Date: 10/11/2017
- * Time: 12:31
- */
 
 namespace Tests\Diag\Storage;
 
-use Diag\Config;
 use Diag\Record;
 use Diag\Severity;
 use Diag\Storage\CanPersist;
@@ -22,7 +15,7 @@ class SqliteTest extends TestCase
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new Config());
+        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
         $this->sqlite->setup();
     }
 

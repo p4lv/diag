@@ -1,20 +1,10 @@
 imports:
+    - { resource: config-clickhouse.yml }
     - { resource: parameters/development/database.php }
+    - { resource: parameters/development/db.yml }
     - { resource: config-common.yml }
 
-parameters:
-  storage:
-    sqlite:
-      database: :memory:
-      log_table: table_log
-      cleanup_interval: 'P1M'
-    clickhouse:
-      host: 127.0.0.1
-      port: 5188
-      database: default
-      user: default
-      password: ''
-      log_table: table_log'
+
 
 
 #properties:

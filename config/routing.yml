@@ -4,6 +4,22 @@ root:
         controller: Diag\Controller\Landing
         action: index
     methods: [GET, POST]
+api:
+    path: /api/{action}
+    defaults:
+        controller: Diag\Controller\Api
+        action: list
+    methods: [GET, POST]
+api.single.item:
+    path: /api/{action}/{id}{slash}
+    defaults:
+        controller: Diag\Controller\Api
+        action: record
+    requirements:
+        id: "[1-9][0-9]*"
+        action: "record"
+        slash: "[/]{0,1}"
+    methods: [GET]
 #
 #section:
 #    path: /{controller}{slash}

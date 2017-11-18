@@ -2,22 +2,15 @@
 
 namespace Diag;
 
-class DiagResponse
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+class DiagResponse extends JsonResponse
 {
-    private $statusCode;
-    private $content;
-
-    public function __construct($content, $statusCode = 200)
+    public function __construct($data = null, int $status = 200, array $headers = [], bool $json = false)
     {
-        $this->content = $content;
-        $this->statusCode = $statusCode;
-    }
-
-    public function __toString()
-    {
-        return json_encode([
-            'status' => $this->statusCode,
-            'result' => $this->content
-        ]);
+        if ($data instanceof DiagRecord) {
+            $data = $data->toArray();
+        }
+        parent::__construct($data, $status, $headers, $json);
     }
 }

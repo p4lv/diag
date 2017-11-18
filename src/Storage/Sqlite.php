@@ -2,25 +2,23 @@
 
 namespace Diag\Storage;
 
-use Diag\Config;
+use DateTimeImmutable;
 use Diag\DiagRecord;
 use Diag\Exception\StorageFlushError;
+use PDO;
 use Diag\Record;
 
 class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 {
-    const STORAGE = 'Sqlite';
-
     private $engine;
     private $cleanupInterval;
     private $logTable;
 
-    public function __construct(Config $config)
+    public function __construct(PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
-        $this->engine = new \PDO('sqlite:' . $config->getStorage(self::STORAGE)['database']);
-        $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-        $this->logTable = $config->getStorage(self::STORAGE)['log_table'];
-        $this->cleanupInterval = $config->getStorage(self::STORAGE)['cleanup_interval'];
+        $this->engine = $engine;
+        $this->logTable = $logTable;
+        $this->cleanupInterval = $cleanupInterval;
     }
 
     public function last($numberOfElements = 10, ?int $beforeId = null): array
@@ -67,14 +65,14 @@ version
 
     public function get($id): DiagRecord
     {
-        $sql = "select id, message, severity, eventType, projectId, createdAt, version from "
-            . $this->logTable
-            . " where id = :id";
+        $sql = "SELECT id, message, severity, eventType, projectId, createdAt, version 
+                FROM {$this->logTable}
+                WHERE id = :id ";
         $stm = $this->engine->prepare($sql);
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
 
         $stm->execute();
-//        return $stm->fetchObject(Record::class);
+
         $row = $stm->fetch(\PDO::FETCH_ASSOC);
 
         return new Record($row);
@@ -121,10 +119,10 @@ version
         return true;
     }
 
-    public function cleanup(\DateTime $now = null) : bool
+    public function cleanup(DateTimeImmutable $now = null): bool
     {
         if ($now === null) {
-            $now = new \DateTime();
+            $now = new DateTimeImmutable();
         }
         $stm = $this->engine->prepare(
             "
@@ -134,14 +132,14 @@ version
         );
         return $stm->execute(
             [
-                'cleanUpFromDate' => (clone $now)
-                                        ->add(new \DateInterval($this->cleanupInterval))
-                                        ->format('Y-m-d H:i:s')
+                'cleanUpFromDate' => $now
+                    ->add(new \DateInterval($this->cleanupInterval))
+                    ->format('Y-m-d H:i:s')
             ]
         );
     }
 
-    public function setup() : bool
+    public function setup(): bool
     {
         $this->engine->exec("DROP TABLE IF EXISTS {$this->logTable}");
         $this->engine->exec("

@@ -1,0 +1,19 @@
+parameters:
+
+  storage: 'sqlite'
+  clickhouse.host: 127.0.0.1
+  clickhouse.port: 8123
+  clickhouse.database: default
+  clickhouse.user: default
+  clickhouse.password: ''
+
+  database.dsn: 'sqlite:/tmp/diag.sqlite'
+  sqlite.cleanup_interval: 'P1M'
+
+
+  diag.storage: 'Diag\Storage\Sqlite'
+
+  log.reader.storage: '@Diag\Storage\Sqlite'
+  log.mapper.storage: '@Diag\Storage\Sqlite'
+  log.table.name: 'log_table'
+#  log.reader.storage: '@Diag\Storage\Clickhouse'

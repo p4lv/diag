@@ -7,3 +7,24 @@ services:
 
     Diag\Controller\:
             resource: '../src/Controller/*'
+
+
+
+
+    Diag\Storage\Clickhouse:
+      arguments:
+        $logTable: 'log_table'
+    Diag\PDO:
+      arguments: ['%database.dsn%']
+#      calls:
+#        - method: setAttribute
+#          arguments: [!php/const:\PDO::ATTR_ERRMODE,!php/const:\PDO::ERRMODE_EXCEPTION ]
+
+    Diag\Storage\Sqlite:
+      arguments: ['@Diag\PDO', '%log.table.name%']
+
+    Diag\LogReader:
+      arguments: ['%log.reader.storage%']
+
+    Diag\DataMapper:
+      arguments: ['%log.mapper.storage%']

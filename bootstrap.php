@@ -1,7 +1,6 @@
 <?php
 
 
-
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderResolver;
 use Symfony\Component\Config\Loader\DelegatingLoader;
@@ -14,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
 
-require_once __DIR__.'/vendor/autoload.php';
+require_once __DIR__ . '/vendor/autoload.php';
 
 $request = Request::createFromGlobals();
 
@@ -32,7 +31,6 @@ $loader = new DelegatingLoader($resolver);
 $loader->load('config-development.yml');
 
 $container->compile();
-
 
 // routing
 $loader = new Routing\Loader\YamlFileLoader($locator);
@@ -52,30 +50,24 @@ foreach ($parameters as $key => $value) {
 
 $command = $request->getMethod() . $request->get('action');
 
-
 try {
-//    dump($request->get('controller'));
-//    exit;
-
     $controller = $container->get($request->get('controller'));
-//dump($controller);exit;
-    $data = $controller->{$command}($request) ?? [];
-    $data = ['status' => 'ok'] + $data;
+    $controller->setContainer($container);
+    $response = $controller->{$command}($request) ?? new JsonResponse(['status' => 'error', 'message' => "There is no such endpoint {$controller}::{$command}."], 500);
+
 } catch (\Exception $exception) {
     $data = [
         'status' => 'error',
         'message' => $exception->getMessage(),
     ];
+    $response = new JsonResponse($data);
+
 } catch (\TypeError $error) {
     $data = [
-        'status' => 'error',
-        'message' => 'Invalid dependency',
+        'status' => 'fatal',
+        'message' => $error->getMessage(),
     ];
+    $response = new JsonResponse($data);
 }
 
-
-var_dump($data);
-//$name = $request->get('view');
-//$view = $container->get($name);
-//$response = $view->{$command}($data) ?? new Response;
-//$response->send();
+$response->send();

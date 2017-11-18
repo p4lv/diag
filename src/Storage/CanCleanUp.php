@@ -3,7 +3,9 @@
 namespace Diag\Storage;
 
 
+use DateTimeImmutable;
+
 interface CanCleanUp
 {
-    public function cleanup(\DateTime $now = null) : bool;
+    public function cleanup(DateTimeImmutable $now = null) : bool;
 }
