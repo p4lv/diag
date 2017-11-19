@@ -5,12 +5,12 @@ namespace Diag\Storage;
 
 use ClickhouseClient\Client\Client as ClickhouseClient;
 use Diag\DiagRecord;
+use Diag\Exception\NotImplemented;
 use Diag\Record;
 
 class Clickhouse implements CanPersist, CanFetch, CanSetUp
 {
     private $client;
-    /** @var  string */
     private $logTable;
 
     public function __construct(ClickhouseClient $client, $logTable = 'log_table')
@@ -22,11 +22,13 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
     public function get($id): DiagRecord
     {
         // TODO: Implement get() method.
+        throw new NotImplemented;
     }
 
     public function search(array $filters): array
     {
         // TODO: Implement search() method.
+        throw new NotImplemented;
     }
 
     public function last($count, ?int $beforeID = null): array

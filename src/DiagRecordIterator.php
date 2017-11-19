@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: bogdans
- * Date: 11/10/17
- * Time: 10:44 PM
- */
 
 namespace Diag;
 

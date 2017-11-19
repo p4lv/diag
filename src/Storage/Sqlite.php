@@ -4,6 +4,7 @@ namespace Diag\Storage;
 
 use DateTimeImmutable;
 use Diag\DiagRecord;
+use Diag\Exception\MissingRecord;
 use Diag\Exception\StorageFlushError;
 use PDO;
 use Diag\Record;
@@ -17,6 +18,7 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
     public function __construct(PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
         $this->engine = $engine;
+//        $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->logTable = $logTable;
         $this->cleanupInterval = $cleanupInterval;
     }
@@ -72,6 +74,10 @@ version
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
 
         $stm->execute();
+
+        if(!$stm->rowCount()) {
+            throw new MissingRecord;
+        }
 
         $row = $stm->fetch(\PDO::FETCH_ASSOC);
 
