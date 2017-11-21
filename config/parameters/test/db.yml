@@ -10,6 +10,8 @@ parameters:
   database.dsn: sqlite::memory:
   sqlite.cleanup_interval: 'P1M'
 
+  diag.storage: 'Diag\Storage\Sqlite'
+
   log.reader.storage: '@Diag\Storage\Sqlite'
   log.mapper.storage: '@Diag\Storage\Sqlite'
   log.table.name: 'log_table'
