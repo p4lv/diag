@@ -1,5 +1,4 @@
 imports:
     - { resource: config-clickhouse.yml }
-    - { resource: parameters/development/database.php }
     - { resource: parameters/development/db.yml }
     - { resource: config-common.yml }
