@@ -2,43 +2,145 @@
 
 namespace Tests\Diag\Storage;
 
+use Diag\Exception\MissingRecord;
 use Diag\Record;
-use Diag\Severity;
-use Diag\Storage\CanPersist;
 use Diag\Storage\Sqlite;
 use PHPUnit\Framework\TestCase;
 
 class SqliteTest extends TestCase
 {
     /** @var  Sqlite */
-    protected $sqlite;
+    protected $storage;
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
-        $this->sqlite->setup();
+        $this->storage = new Sqlite(new \PDO('sqlite::memory:'));
+        $this->storage->setup();
     }
 
-    public function testStore()
+    public function testPersistInsert()
     {
-        $sqlite = $this->sqlite;
+        $message = 'test message';
+        $record = new Record(['message' => $message]);
+        $result = $this->storage->insert($record);
+        $this->assertEquals(true, $result);
+    }
 
-        static::assertInstanceOf(CanPersist::class, $sqlite);
+    public function testPersistBatch()
+    {
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+        $this->assertEquals(true, $result);
+    }
 
+    public function testPersistBatchNonDiagRecord()
+    {
+        $this->expectException(\RuntimeException::class);
 
-        $originalRecordData = ['message' => 'I AM A HERO'];
-        $record = new Record($originalRecordData);
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = ['message' => $message];
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+    }
 
-        $sqlite->insert($record);
+    public function testFetchGet()
+    {
+        $message = 'test message';
+        $record = new Record(['message' => $message]);
+        $result = $this->storage->insert($record);
+        $this->assertEquals(true, $result);
 
-        $row = $sqlite->last(10);
-        static::assertCount(1, $row);
-        $oldRecord = array_shift($row);
-        static::assertEquals($oldRecord['message'], $originalRecordData['message']);
+        $record = $this->storage->get(1);
+        $this->assertInstanceOf(Record::class, $record);
+    }
 
-        $sqlite->insert(new Record(['message' => 'Test me 2', 'severity' => Severity::FATAL, 'projectId' => 666]));
+    public function testFetchGetAfterBatch()
+    {
+        $message = 'test message';
+        $record = new Record(['message' => $message]);
+        $result = $this->storage->insert($record);
+        $this->assertEquals(true, $result);
 
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+        $this->assertEquals(true, $result);
 
-        static::assertCount(2,$sqlite->last(10));
+        $record = $this->storage->get(2);
+        $this->assertInstanceOf(Record::class, $record);
+        $record = $this->storage->get(4);
+        $this->assertInstanceOf(Record::class, $record);
+        $record = $this->storage->get(3);
+        $this->assertInstanceOf(Record::class, $record);
+    }
+
+    public function testFetchGetMissingRecord()
+    {
+        $this->expectException(MissingRecord::class);
+        $record = $this->storage->get(55555);
+    }
+
+    public function testFetchSearch()
+    {
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+        $this->assertEquals(true, $result);
+
+        $records = $this->storage->search(['eventType' => 'general']);
+        $this->assertEquals(true, is_array($records));
+        $this->assertEquals(5, count($records));
+    }
+
+    public function testFetchLast()
+    {
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+        $this->assertEquals(true, $result);
+
+        $records = $this->storage->last(5);
+        $this->assertEquals(true, is_array($records));
+        $this->assertEquals(5, count($records));
+    }
+
+    public function testFetchLastAfterId()
+    {
+        $batch = [];
+        $message = 'test message';
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['message' => $message]);
+        $result = $this->storage->batch($batch);
+        $this->assertEquals(true, $result);
+
+        $records = $this->storage->last(5, new Record(['id' => 4]));
+        $this->assertEquals(true, is_array($records));
+        $this->assertEquals(3, count($records));
     }
 }

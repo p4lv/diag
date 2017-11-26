@@ -5,6 +5,7 @@ namespace Diag\Storage;
 
 use ClickhouseClient\Client\Client as ClickhouseClient;
 use Diag\DiagRecord;
+use Diag\Exception\MissingRecord;
 use Diag\Exception\NotImplemented;
 use Diag\Record;
 
@@ -21,8 +22,19 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
     public function get($id): DiagRecord
     {
-        // TODO: Implement get() method.
-        throw new NotImplemented;
+        $sql = "
+          select id, message, severity, eventType, projectId, createdAt, version
+          from {$this->logTable}
+          where id = '" . (string) $id .  "' LIMIT 1";
+
+        $response = $this->client->query($sql);
+        $records = $response->getContent()['data'];
+
+        if(!$records) {
+            throw new MissingRecord;
+        }
+
+        return new Record($records[0]);
     }
 
     public function search(array $filters): array
@@ -31,15 +43,15 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
         throw new NotImplemented;
     }
 
-    public function last($count, ?int $beforeID = null): array
+    public function last($count, DiagRecord $beforeRecord = null): array
     {
         $sql = "
           select id, message, severity, eventType, projectId, createdAt, version
           from {$this->logTable} 
         ";
 
-        if ($beforeID !== null) {
-            $sql .= " where id <  " . $beforeID;
+        if (null !== $beforeRecord) {
+            $sql .= " where createdAt <  '" . $beforeRecord->getCreatedAt()->format('Y-m-d H:i:s') . "'";
         }
         $sql .= " order by id desc limit " . $count;
 
