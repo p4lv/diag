@@ -2,6 +2,10 @@
 #                          Generated on phpdocker.io                          #
 ###############################################################################
 version: "3.1"
+
+networks:
+  diag_default:
+
 services:
 
     memcached:

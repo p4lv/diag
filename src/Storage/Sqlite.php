@@ -38,8 +38,7 @@ from {$this->logTable} ";
             $params['beforeId'] = (int) $beforeRecord->getId();
         }
         $stm->execute($params);
-        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        return $stm->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function insert(DiagRecord $data): bool
