@@ -53,7 +53,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
         if (null !== $beforeRecord) {
             $sql .= " where createdAt <  '" . $beforeRecord->getCreatedAt()->format('Y-m-d H:i:s') . "'";
         }
-        $sql .= " order by id desc limit " . $count;
+        $sql .= " order by createdAt desc limit " . $count;
 
         $response = $this->client->query($sql);
         $records = $response->getContent()['data'];
@@ -63,6 +63,11 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
     public function batch(array $data): bool
     {
+        foreach ($data as $record) {
+            if (!($record instanceof Record)) {
+                throw new \RuntimeException('items passed to "batch" method should be instanceof ' . Record::class);
+            }
+        }
         try {
             $this->client->writeRows('INSERT INTO ' . $this->logTable,
                 array_map(function (Record $record) {

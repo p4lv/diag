@@ -6,7 +6,7 @@ namespace Diag;
 interface DiagRecord
 {
 
-    public function getId(): ?int;
+    public function getId();
 
     public function getCreatedAt(): \DateTime;
 
