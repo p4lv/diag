@@ -10,13 +10,11 @@ use PHPUnit\Framework\TestCase;
 
 class SqliteTest extends TestCase
 {
-    /** @var  Sqlite */
     protected $sqlite;
 
     public function setUp()
     {
         global $container;
-
         $this->sqlite = new Sqlite(new \PDO($container->getParameter('database.dsn') ));
         $this->sqlite->setup();
     }

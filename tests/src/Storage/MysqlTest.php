@@ -33,7 +33,6 @@ class MysqlTest extends TestCase
 
         static::assertInstanceOf(CanPersist::class, $sqlite);
 
-
         $originalRecordData = ['message' => 'I AM A HERO'];
         $record = new Record($originalRecordData);
 
@@ -45,7 +44,6 @@ class MysqlTest extends TestCase
         static::assertEquals($oldRecord['message'], $originalRecordData['message']);
 
         $sqlite->insert(new Record(['message' => 'Test me 2', 'severity' => Severity::FATAL, 'projectId' => 666]));
-
 
         static::assertCount(2, $sqlite->last(10));
     }
