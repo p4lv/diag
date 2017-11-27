@@ -15,7 +15,9 @@ class SqliteTest extends TestCase
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
+        global $container;
+
+        $this->sqlite = new Sqlite(new \PDO($container->getParameter('database.dsn') ));
         $this->sqlite->setup();
     }
 
