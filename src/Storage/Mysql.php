@@ -151,7 +151,7 @@ version
         $this->engine->exec("
 CREATE TABLE {$this->logTable}
 (
-  id        INTEGER PRIMARY KEY AUTOINCREMENT,
+  id        INTEGER PRIMARY KEY AUTO_INCREMENT,
   message   TEXT,
   severity  INTEGER,
   eventType TEXT,

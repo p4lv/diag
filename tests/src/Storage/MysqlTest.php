@@ -18,12 +18,12 @@ class MysqlTest extends TestCase
     {
         global $container;
 
-        $this->mariadb = new Mysql(
-            new \PDO('mysql:host='.$container->getParameter('mariadb.host').';port='.$container->getParameter('mariadb.database').';dbname='.$container->getParameter('mariadb.database'),
+        $pdo = new \PDO('mysql:host=' . $container->getParameter('mariadb.host') . ';port=' . $container->getParameter('mariadb.port') . ';dbname=' . $container->getParameter('mariadb.database'),
             $container->getParameter('mariadb.user'),
             $container->getParameter('mariadb.password')
-            )
         );
+
+        $this->mariadb = new Mysql($pdo);
         $this->mariadb->setup();
     }
 
@@ -47,6 +47,6 @@ class MysqlTest extends TestCase
         $sqlite->insert(new Record(['message' => 'Test me 2', 'severity' => Severity::FATAL, 'projectId' => 666]));
 
 
-        static::assertCount(2,$sqlite->last(10));
+        static::assertCount(2, $sqlite->last(10));
     }
 }
