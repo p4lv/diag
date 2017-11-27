@@ -5,23 +5,31 @@ namespace Tests\Diag\Storage;
 use Diag\Record;
 use Diag\Severity;
 use Diag\Storage\CanPersist;
+use Diag\Storage\Mysql;
 use Diag\Storage\Sqlite;
 use PHPUnit\Framework\TestCase;
 
-class SqliteTest extends TestCase
+class MysqlTest extends TestCase
 {
     /** @var  Sqlite */
-    protected $sqlite;
+    protected $mariadb;
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
-        $this->sqlite->setup();
+        global $container;
+
+        $this->mariadb = new Mysql(
+            new \PDO('mysql:host='.$container->getParameter('mariadb.host').';port='.$container->getParameter('mariadb.database').';dbname='.$container->getParameter('mariadb.database'),
+            $container->getParameter('mariadb.user'),
+            $container->getParameter('mariadb.password')
+            )
+        );
+        $this->mariadb->setup();
     }
 
     public function testStore()
     {
-        $sqlite = $this->sqlite;
+        $sqlite = $this->mariadb;
 
         static::assertInstanceOf(CanPersist::class, $sqlite);
 

@@ -2,6 +2,7 @@
 
 namespace Diag\Storage;
 
+use DateInterval;
 use DateTimeImmutable;
 use Diag\DiagRecord;
 use Diag\Exception\MissingRecord;
@@ -9,7 +10,7 @@ use Diag\Exception\StorageFlushError;
 use PDO;
 use Diag\Record;
 
-class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
+class Mysql implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 {
     private $engine;
     private $cleanupInterval;
@@ -18,7 +19,7 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
     public function __construct(PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
         $this->engine = $engine;
-//        $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+        $this->engine->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $this->logTable = $logTable;
         $this->cleanupInterval = $cleanupInterval;
     }
@@ -29,16 +30,16 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
 from {$this->logTable} ";
 
         if ($beforeId) {
-            $sql .= " where id < :beforeId ";
+            $sql .= ' where id < :beforeId ';
         }
         $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
         if ($beforeId) {
-            $stm->bindParam(':beforeId', $beforeId, \PDO::PARAM_INT);
+            $stm->bindParam(':beforeId', $beforeId, PDO::PARAM_INT);
         }
 
         $stm->execute();
-        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
+        $result = $stm->fetchAll(PDO::FETCH_ASSOC);
         return $result;
     }
 
@@ -71,7 +72,7 @@ version
                 FROM {$this->logTable}
                 WHERE id = :id ";
         $stm = $this->engine->prepare($sql);
-        $stm->bindParam(':id', $id, \PDO::PARAM_INT);
+        $stm->bindParam(':id', $id, PDO::PARAM_INT);
 
         $stm->execute();
 
@@ -79,15 +80,14 @@ version
             throw new MissingRecord;
         }
 
-        $row = $stm->fetch(\PDO::FETCH_ASSOC);
+        $row = $stm->fetch(PDO::FETCH_ASSOC);
 
         return new Record($row);
     }
 
     public function search(array $filters): array
     {
-        $record = new Record();
-        $keys = array_keys($record->toArray());
+        $keys = array_keys((new Record())->toArray());
         $keys[] = 'id';
 
         $sanitizedF = [];
@@ -101,14 +101,14 @@ version
 
         }
 
-
-        if (count($sanitizedF)) {
+        $response = [];
+        if (\count($sanitizedF)) {
             $stm = $this->engine->prepare($sql);
             $stm->execute($sanitizedF);
-            return $stm->fetchAll(\PDO::FETCH_ASSOC);
+            $response = $stm->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return [-1];
+        return $response;
     }
 
     public function batch(array $data): bool
@@ -139,7 +139,7 @@ version
         return $stm->execute(
             [
                 'cleanUpFromDate' => $now
-                    ->add(new \DateInterval($this->cleanupInterval))
+                    ->add(new DateInterval($this->cleanupInterval))
                     ->format('Y-m-d H:i:s')
             ]
         );
