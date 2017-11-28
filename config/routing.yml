@@ -4,6 +4,12 @@ root:
         controller: Diag\Controller\Landing
         action: index
     methods: [GET, POST]
+debug:
+    path: /debug
+    defaults:
+        controller: Diag\Controller\Debug
+        action: index
+    methods: [GET, POST]
 api:
     path: /api/{action}
     defaults:
