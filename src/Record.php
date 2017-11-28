@@ -28,7 +28,7 @@ class Record implements DiagRecord
         $this->projectId = $data['projectId'] ?? $data['project_id'] ?? 0;
     }
 
-    public function getId(): ?int
+    public function getId()
     {
         return $this->id;
     }
@@ -70,14 +70,18 @@ class Record implements DiagRecord
 
     public function toArray(): array
     {
-        return [
+        $record = [
             'message' => $this->getMessage(),
             'severity' => $this->getSeverity(),
             'eventType' => $this->getType(),
-            'createdAt' => $this->getCreatedAt(),
+            'createdAt' => (string) $this->getCreatedAt(),
             'projectId' => $this->getProjectId(),
             'version' => $this->getVersion(),
         ];
+        if ($this->getId()) {
+            $record['id'] = $this->getId();
+        }
+        return $record;
     }
 
     public function getVersion()
@@ -88,8 +92,8 @@ class Record implements DiagRecord
     /**
      * @return false|mixed|string
      */
-    public function getCreatedAt()
+    public function getCreatedAt() : DateTime
     {
-        return $this->createdAt;
+        return new DateTime($this->createdAt);
     }
 }

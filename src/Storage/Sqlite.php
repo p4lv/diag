@@ -18,28 +18,27 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
     public function __construct(PDO $engine, $logTable = 'log_table', $cleanupInterval = 'P1M')
     {
         $this->engine = $engine;
-//        $this->engine->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         $this->logTable = $logTable;
         $this->cleanupInterval = $cleanupInterval;
     }
 
-    public function last($numberOfElements = 10, ?int $beforeId = null): array
+    public function last(int $numberOfElements = 10, DiagRecord $beforeRecord = null): array
     {
         $sql = "select id, message, severity, eventType, projectId, createdAt, version
 from {$this->logTable} ";
 
-        if ($beforeId) {
+        if (null !== $beforeRecord) {
             $sql .= " where id < :beforeId ";
         }
         $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
-        if ($beforeId) {
-            $stm->bindParam(':beforeId', $beforeId, \PDO::PARAM_INT);
-        }
 
-        $stm->execute();
-        $result = $stm->fetchAll(\PDO::FETCH_ASSOC);
-        return $result;
+        $params = [];
+        if (null !== $beforeRecord) {
+            $params['beforeId'] = (int) $beforeRecord->getId();
+        }
+        $stm->execute($params);
+        return $stm->fetchAll(\PDO::FETCH_ASSOC);
     }
 
     public function insert(DiagRecord $data): bool
@@ -72,16 +71,14 @@ version
                 WHERE id = :id ";
         $stm = $this->engine->prepare($sql);
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
-
+        $stm->setFetchMode(PDO::FETCH_CLASS, Record::class);
         $stm->execute();
 
-        if(!$stm->rowCount()) {
+        $record = $stm->fetch();
+        if (!$record) {
             throw new MissingRecord;
         }
-
-        $row = $stm->fetch(\PDO::FETCH_ASSOC);
-
-        return new Record($row);
+        return $record;
     }
 
     public function search(array $filters): array
@@ -119,6 +116,8 @@ version
                 if (!$result) {
                     throw new StorageFlushError;
                 }
+            } else {
+                throw new \RuntimeException('items passed to "batch" method should be instanceof ' . Record::class);
             }
         }
 

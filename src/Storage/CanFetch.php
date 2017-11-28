@@ -12,5 +12,5 @@ interface CanFetch
 
     public function search(array $filters) : array;
 
-    public function last($count, ?int $beforeID = null) : array ;
+    public function last(int $count, DiagRecord $beforeRecord = null) : array ;
 }
