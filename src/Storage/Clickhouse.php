@@ -43,7 +43,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
         throw new NotImplemented;
     }
 
-    public function last($count, DiagRecord $beforeRecord = null): array
+    public function last(int $count, DiagRecord $beforeRecord = null): array
     {
         $sql = "
           select id, message, severity, eventType, projectId, createdAt, version

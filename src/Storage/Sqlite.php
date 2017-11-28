@@ -22,7 +22,7 @@ class Sqlite implements CanPersist, CanFetch, CanCleanUp, CanSetUp
         $this->cleanupInterval = $cleanupInterval;
     }
 
-    public function last($numberOfElements = 10, DiagRecord $beforeRecord = null): array
+    public function last(int $numberOfElements = 10, DiagRecord $beforeRecord = null): array
     {
         $sql = "select id, message, severity, eventType, projectId, createdAt, version
 from {$this->logTable} ";
