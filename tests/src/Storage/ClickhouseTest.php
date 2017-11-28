@@ -2,28 +2,45 @@
 
 namespace Tests\Diag\Storage;
 
+use ClickhouseClient\Client\Client;
+use ClickhouseClient\Client\Config;
 use Diag\Exception\MissingRecord;
+use Diag\Exception\NotImplemented;
 use Diag\Record;
+use Diag\Storage\Clickhouse;
 use Diag\Storage\Sqlite;
 use PHPUnit\Framework\TestCase;
 
-class SqliteTest extends TestCase
+class ClickhouseTest extends TestCase
 {
-    /** @var  Sqlite */
+    /** @var  Clickhouse */
     protected $storage;
-
+    /** @var  Client */
+    protected $client;
     public function setUp()
     {
-        global $container;
+        $config = new Config(
+            // basic connection information
+            ['host' => '127.0.0.1', 'port' => '5188', 'protocol' => 'http'],
+            // settings
+            ['database' => 'default'],
+            // credentials
+            ['user' => 'default', 'password' => '']
+        );
+        $this->client = new Client($config);
+        $this->storage = new Clickhouse($this->client);
+        $this->storage->setup();
+    }
 
-        $this->sqlite = new Sqlite(new \PDO($container->getParameter('database.dsn') ));
-        $this->sqlite->setup();
+    public function tearDown()
+    {
+        $this->client->system('DROP TABLE log_table');
     }
 
     public function testPersistInsert()
     {
         $message = 'test message';
-        $record = new Record(['message' => $message]);
+        $record = new Record(['id' => uniqid(), 'message' => $message]);
         $result = $this->storage->insert($record);
         $this->assertEquals(true, $result);
     }
@@ -55,12 +72,13 @@ class SqliteTest extends TestCase
 
     public function testFetchGet()
     {
+        $id = uniqid();
         $message = 'test message';
-        $record = new Record(['message' => $message]);
+        $record = new Record(['id' => $id,'message' => $message]);
         $result = $this->storage->insert($record);
         $this->assertEquals(true, $result);
 
-        $record = $this->storage->get(1);
+        $record = $this->storage->get($id);
         $this->assertInstanceOf(Record::class, $record);
     }
 
@@ -73,19 +91,19 @@ class SqliteTest extends TestCase
 
         $batch = [];
         $message = 'test message';
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
         $result = $this->storage->batch($batch);
         $this->assertEquals(true, $result);
 
-        $record = $this->storage->get(2);
+        $record = $this->storage->get($batch[2]->getId());
         $this->assertInstanceOf(Record::class, $record);
-        $record = $this->storage->get(4);
+        $record = $this->storage->get($batch[4]->getId());
         $this->assertInstanceOf(Record::class, $record);
-        $record = $this->storage->get(3);
+        $record = $this->storage->get($batch[3]->getId());
         $this->assertInstanceOf(Record::class, $record);
     }
 
@@ -97,6 +115,8 @@ class SqliteTest extends TestCase
 
     public function testFetchSearch()
     {
+        $this->expectException(NotImplemented::class);
+
         $batch = [];
         $message = 'test message';
         $batch[] = new Record(['message' => $message]);
@@ -105,22 +125,19 @@ class SqliteTest extends TestCase
         $batch[] = new Record(['message' => $message]);
         $batch[] = new Record(['message' => $message]);
         $result = $this->storage->batch($batch);
-        $this->assertEquals(true, $result);
 
         $records = $this->storage->search(['eventType' => 'general']);
-        $this->assertEquals(true, is_array($records));
-        $this->assertEquals(5, count($records));
     }
 
     public function testFetchLast()
     {
         $batch = [];
         $message = 'test message';
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message]);
         $result = $this->storage->batch($batch);
         $this->assertEquals(true, $result);
 
@@ -133,15 +150,15 @@ class SqliteTest extends TestCase
     {
         $batch = [];
         $message = 'test message';
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
-        $batch[] = new Record(['message' => $message]);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message, 'createdAt' => '2017-05-11 22:11:15']);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message, 'createdAt' => '2017-05-11 22:11:15']);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message, 'createdAt' => '2017-05-11 22:11:15']);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message, 'createdAt' => '2017-05-11 22:11:22']);
+        $batch[] = new Record(['id' => uniqid(), 'message' => $message, 'createdAt' => '2017-05-11 22:11:34']);
         $result = $this->storage->batch($batch);
         $this->assertEquals(true, $result);
 
-        $records = $this->storage->last(5, new Record(['id' => 4]));
+        $records = $this->storage->last(5, new Record(['createdAt' => '2017-05-11 22:11:17']));
         $this->assertEquals(true, is_array($records));
         $this->assertEquals(3, count($records));
     }

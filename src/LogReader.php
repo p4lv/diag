@@ -14,9 +14,9 @@ class LogReader
         $this->storage = $storage;
     }
 
-    public function getLast($numberOfRecords, $offset = null)
+    public function getLast($numberOfRecords)
     {
-        return $this->storage->last($numberOfRecords, $offset);
+        return $this->storage->last($numberOfRecords);
     }
 
     public function search(array $array): array

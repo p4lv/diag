@@ -14,7 +14,10 @@ class LogReaderTest extends TestCase
 
     public function setUp()
     {
-        $this->sqlite = new Sqlite(new \PDO('sqlite::memory:'));
+        $pdo = new \PDO('sqlite::memory:');
+        $pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        $this->sqlite = new Sqlite($pdo);
         $this->sqlite->setup();
     }
 
@@ -49,7 +52,6 @@ class LogReaderTest extends TestCase
         for($i = 0; $i < $count ; $i++) {
             $record = new Record(
                 [
-                    'id' => $i,
                     'message' => file_get_contents('https://baconipsum.com/api/?type=meat-and-filler') ?? 'default message',
                     'eventType' => 'test',
                 ]
