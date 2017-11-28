@@ -5,12 +5,12 @@ namespace Diag;
 
 class Severity
 {
-    const LOG = 16;
-    const DEBUG = 32;
-    const NOTICE = 48;
-    const WARNING = 64;
-    const ERROR = 80;
-    const FATAL = 96;
-    const CRITICAL = 112;
-    const APOCALYPSE = 128;
+    public const LOG = 16;
+    public const DEBUG = 32;
+    public const NOTICE = 48;
+    public const WARNING = 64;
+    public const ERROR = 80;
+    public const FATAL = 96;
+    public const CRITICAL = 112;
+    public const APOCALYPSE = 128;
 }

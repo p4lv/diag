@@ -10,6 +10,12 @@ parameters:
   database.dsn: sqlite::memory:
   sqlite.cleanup_interval: 'P1M'
 
+  mariadb.host: 127.0.0.1
+  mariadb.port: 6670
+  mariadb.database: diag
+  mariadb.user: drag
+  mariadb.password: qwe123
+
   diag.storage: 'Diag\Storage\Sqlite'
 
   log.reader.storage: '@Diag\Storage\Sqlite'

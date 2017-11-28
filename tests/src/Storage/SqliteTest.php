@@ -15,9 +15,8 @@ class SqliteTest extends TestCase
     public function setUp()
     {
         global $container;
-
-        $this->sqlite = new Sqlite(new \PDO($container->getParameter('database.dsn') ));
-        $this->sqlite->setup();
+        $this->storage = new Sqlite(new \PDO($container->getParameter('database.dsn') ));
+        $this->storage->setup();
     }
 
     public function testPersistInsert()

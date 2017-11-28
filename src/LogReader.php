@@ -2,7 +2,6 @@
 
 namespace Diag;
 
-
 use Diag\Storage\CanFetch;
 
 class LogReader
