@@ -27,16 +27,31 @@ class MysqlTest extends TestCase
         $this->mariadb->setup();
     }
 
+    public function testInsert()
+    {
+        $record = new Record(['message' => time().'testMessage'.' '.__METHOD__]);
+        $result = $this->mariadb->insert($record);
+        $this->assertEquals(true, $result);
+
+        $lastRecord = $this->mariadb->last(1);
+
+        $this->assertEquals($record->getMessage(), $lastRecord[0]['message']);
+
+    }
+
     public function testStore()
     {
         $sqlite = $this->mariadb;
 
         static::assertInstanceOf(CanPersist::class, $sqlite);
 
-        $originalRecordData = ['message' => 'I AM A HERO'];
+        $t = 'test'.time();
+        $originalRecordData = ['message' => $t];
         $record = new Record($originalRecordData);
 
         $sqlite->insert($record);
+
+        $this->assertEquals(1, $this->mariadb->count());
 
         $row = $sqlite->last(10);
         static::assertCount(1, $row);

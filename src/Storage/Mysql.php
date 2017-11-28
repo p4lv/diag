@@ -35,7 +35,7 @@ from {$this->logTable} ";
         $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
 
-        if (null !==$beforeRecord) {
+        if (null !== $beforeRecord) {
             $stm->bindParam(':beforeId', $beforeRecord->getId(), PDO::PARAM_INT);
         }
 
@@ -77,7 +77,7 @@ version
 
         $stm->execute();
 
-        if(!$stm->rowCount()) {
+        if (!$stm->rowCount()) {
             throw new MissingRecord;
         }
 
@@ -124,6 +124,24 @@ version
         }
 
         return true;
+    }
+
+    public function count(): int
+    {
+        $sql = "SELECT count(id)
+                FROM {$this->logTable}
+                ";
+        $stm = $this->engine->prepare($sql);
+
+        $stm->execute();
+
+        if (!$stm->rowCount()) {
+            throw new MissingRecord;
+        }
+
+        $row = $stm->fetch(PDO::FETCH_NUM);
+
+        return (int)$row[0];
     }
 
     public function cleanup(DateTimeImmutable $now = null): bool

@@ -25,6 +25,10 @@ class SqliteTest extends TestCase
         $record = new Record(['message' => $message]);
         $result = $this->storage->insert($record);
         $this->assertEquals(true, $result);
+
+//        $r = $this->storage->last(1);
+//        dump($r);exit;
+//        $this->assertEquals(1, $this->storage->count());
     }
 
     public function testPersistBatch()

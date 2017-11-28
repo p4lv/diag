@@ -124,6 +124,24 @@ version
         return true;
     }
 
+    public function count(): int
+    {
+        $sql = "SELECT count(*)
+                FROM {$this->logTable}
+                ";
+        $stm = $this->engine->prepare($sql);
+
+        $stm->execute();
+
+        if (!$stm->rowCount()) {
+            return 0;
+        }
+
+        $row = $stm->fetch(PDO::FETCH_NUM);
+
+        return (int)$row[0];
+    }
+
     public function cleanup(DateTimeImmutable $now = null): bool
     {
         if ($now === null) {
