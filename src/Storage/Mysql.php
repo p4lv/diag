@@ -24,18 +24,19 @@ class Mysql implements CanPersist, CanFetch, CanCleanUp, CanSetUp
         $this->cleanupInterval = $cleanupInterval;
     }
 
-    public function last($numberOfElements = 10, ?int $beforeId = null): array
+    public function last(int $numberOfElements = 10, DiagRecord $beforeRecord = null): array
     {
         $sql = "select id, message, severity, eventType, projectId, createdAt, version
 from {$this->logTable} ";
 
-        if ($beforeId) {
+        if (null !== $beforeRecord) {
             $sql .= ' where id < :beforeId ';
         }
         $sql .= " order by id desc limit {$numberOfElements}";
         $stm = $this->engine->prepare($sql);
-        if ($beforeId) {
-            $stm->bindParam(':beforeId', $beforeId, PDO::PARAM_INT);
+
+        if (null !==$beforeRecord) {
+            $stm->bindParam(':beforeId', $beforeRecord->getId(), PDO::PARAM_INT);
         }
 
         $stm->execute();

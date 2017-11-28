@@ -52,7 +52,7 @@ class LogReaderTest extends TestCase
         for($i = 0; $i < $count ; $i++) {
             $record = new Record(
                 [
-                    'message' => file_get_contents('https://baconipsum.com/api/?type=meat-and-filler') ?? 'default message',
+                    'message' => 'Here SHould be faker',
                     'eventType' => 'test',
                 ]
             );
