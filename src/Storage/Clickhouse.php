@@ -51,7 +51,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
         ";
 
         if (null !== $beforeRecord) {
-            $sql .= " where createdAt <  '" . $beforeRecord->getCreatedAt()->format('Y-m-d H:i:s') . "'";
+            $sql .= " where createdAt <  '" . (string) $beforeRecord->getCreatedAt() . "'";
         }
         $sql .= " order by createdAt desc limit " . $count;
 

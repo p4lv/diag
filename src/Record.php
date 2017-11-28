@@ -74,7 +74,7 @@ class Record implements DiagRecord
             'message' => $this->getMessage(),
             'severity' => $this->getSeverity(),
             'eventType' => $this->getType(),
-            'createdAt' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'createdAt' => (string) $this->getCreatedAt(),
             'projectId' => $this->getProjectId(),
             'version' => $this->getVersion(),
         ];
@@ -92,8 +92,8 @@ class Record implements DiagRecord
     /**
      * @return false|mixed|string
      */
-    public function getCreatedAt() : \DateTime
+    public function getCreatedAt() : DateTime
     {
-        return new \DateTime($this->createdAt);
+        return new DateTime($this->createdAt);
     }
 }
