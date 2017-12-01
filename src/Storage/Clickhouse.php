@@ -99,7 +99,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
         $sql = "SELECT count(id)
                 FROM {$this->logTable}
                 ";
-        $stm = $this->engine->prepare($sql);
+        $stm = $this->client->prepare($sql);
 
         $stm->execute();
 
