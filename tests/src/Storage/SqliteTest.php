@@ -21,14 +21,13 @@ class SqliteTest extends TestCase
 
     public function testPersistInsert()
     {
-        $message = 'test message';
+        $message = 'test message!!!!!';
         $record = new Record(['message' => $message]);
         $result = $this->storage->insert($record);
         $this->assertEquals(true, $result);
-
-//        $r = $this->storage->last(1);
-//        dump($r);exit;
-//        $this->assertEquals(1, $this->storage->count());
+        $newRecord = $this->storage->get(1);
+        $this->assertEquals($record->getMessage(), $newRecord->getMessage());
+        $this->assertEquals(1, $this->storage->count());
     }
 
     public function testPersistBatch()

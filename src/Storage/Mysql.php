@@ -81,28 +81,28 @@ version
             throw new MissingRecord;
         }
 
-        $row = $stm->fetch(PDO::FETCH_ASSOC);
-
-        return new Record($row);
+        return $stm->fetchObject(Record::class);
     }
 
     public function search(array $filters): array
     {
+        $response = [];
+        if(!\count($filters)) {
+            return $response;
+        }
+
         $keys = array_keys((new Record())->toArray());
         $keys[] = 'id';
-
         $sanitizedF = [];
 
         $sql = "select * from {$this->logTable} where ";
         foreach ($filters as $k => $v) {
-            if (in_array($k, $keys)) {
+            if (\in_array($k, $keys, true)) {
                 $sanitizedF[$k] = $v;
-                $sql .= " {$k} = :{$k}";
+                $sql .= " {$k} = :{$k} ";
             }
-
         }
 
-        $response = [];
         if (\count($sanitizedF)) {
             $stm = $this->engine->prepare($sql);
             $stm->execute($sanitizedF);

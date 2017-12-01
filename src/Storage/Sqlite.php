@@ -130,13 +130,7 @@ version
                 FROM {$this->logTable}
                 ";
         $stm = $this->engine->prepare($sql);
-
         $stm->execute();
-
-        if (!$stm->rowCount()) {
-            return 0;
-        }
-
         $row = $stm->fetch(PDO::FETCH_NUM);
 
         return (int)$row[0];

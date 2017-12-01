@@ -2,16 +2,16 @@
 
 namespace Tests\Diag\Storage;
 
+use Diag\Exception\MissingRecord;
 use Diag\Record;
 use Diag\Severity;
 use Diag\Storage\CanPersist;
 use Diag\Storage\Mysql;
-use Diag\Storage\Sqlite;
 use PHPUnit\Framework\TestCase;
 
 class MysqlTest extends TestCase
 {
-    /** @var  Sqlite */
+    /** @var  Mysql */
     protected $mariadb;
 
     public function setUp()
@@ -37,6 +37,26 @@ class MysqlTest extends TestCase
 
         $this->assertEquals($record->getMessage(), $lastRecord[0]['message']);
 
+    }
+
+    public function testGetByUnknownId()
+    {
+        $this->expectException(MissingRecord::class);
+        $this->mariadb->get(9999999999);
+    }
+
+    public function testByKnownId()
+    {
+        $lastRecord = $this->mariadb->last(1);
+        $this->assertEquals([], $lastRecord);
+        $record = new Record(['message' => time().'testMessage'.' '.__METHOD__]);
+        $result = $this->mariadb->insert($record);
+        $this->assertTrue($result);
+
+        $recordNumber1 = $this->mariadb->get(1);
+        $this->assertTrue($recordNumber1 instanceof Record);
+
+        $this->assertEquals($record->getMessage(), $recordNumber1->getMessage());
     }
 
     public function testStore()
