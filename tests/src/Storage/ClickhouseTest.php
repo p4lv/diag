@@ -17,18 +17,13 @@ class ClickhouseTest extends TestCase
     protected $storage;
     /** @var  Client */
     protected $client;
+
     public function setUp()
     {
-        $config = new Config(
-            // basic connection information
-            ['host' => '127.0.0.1', 'port' => '5188', 'protocol' => 'http'],
-            // settings
-            ['database' => 'default'],
-            // credentials
-            ['user' => 'default', 'password' => '']
-        );
-        $this->client = new Client($config);
-        $this->storage = new Clickhouse($this->client);
+        global $container;
+
+        $this->client = $container->get(\ClickhouseClient\Client\Client::class);
+        $this->storage = $container->get(\Diag\Storage\Clickhouse::class);
         $this->storage->setup();
     }
 
@@ -74,7 +69,7 @@ class ClickhouseTest extends TestCase
     {
         $id = uniqid();
         $message = 'test message';
-        $record = new Record(['id' => $id,'message' => $message]);
+        $record = new Record(['id' => $id, 'message' => $message]);
         $result = $this->storage->insert($record);
         $this->assertEquals(true, $result);
 

@@ -96,20 +96,7 @@ class Clickhouse implements CanPersist, CanFetch, CanSetUp
 
     public function count(): int
     {
-        $sql = "SELECT count(id)
-                FROM {$this->logTable}
-                ";
-        $stm = $this->client->prepare($sql);
-
-        $stm->execute();
-
-        if (!$stm->rowCount()) {
-            throw new MissingRecord;
-        }
-
-        $row = $stm->fetch(PDO::FETCH_NUM);
-
-        return (int)$row[0];
+        throw new NotImplemented(__METHOD__.' not implemented');
     }
 
     public function setup(): bool

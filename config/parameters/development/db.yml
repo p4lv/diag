@@ -2,7 +2,7 @@ parameters:
 
   storage: 'sqlite'
   clickhouse.host: 127.0.0.1
-  clickhouse.port: 8123
+  clickhouse.port: 5188
   clickhouse.database: default
   clickhouse.user: default
   clickhouse.password: ''
