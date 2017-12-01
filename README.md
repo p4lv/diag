@@ -1,6 +1,6 @@
 # diag
 
-![Scrutinizaizer Score](https://scrutinizer-ci.com/g/p4lv/diag/badges/quality-score.png?b=master)
+[![Scrutinizaizer Score](https://scrutinizer-ci.com/g/p4lv/diag/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/p4lv/diag/)
 [![Build Status](https://travis-ci.org/p4lv/diag.svg?branch=master)](https://travis-ci.org/p4lv/diag)
 [![MIT Licence](https://badges.frapsoft.com/os/mit/mit.svg?v=103)](https://opensource.org/licenses/mit-license.php)
 
