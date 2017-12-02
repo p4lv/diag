@@ -81,7 +81,9 @@ version
             throw new MissingRecord;
         }
 
-        return $stm->fetchObject(Record::class);
+        $stm->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, Record::class);
+
+        return $stm->fetch();
     }
 
     public function search(array $filters): array

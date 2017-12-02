@@ -71,9 +71,9 @@ version
                 WHERE id = :id ";
         $stm = $this->engine->prepare($sql);
         $stm->bindParam(':id', $id, \PDO::PARAM_INT);
-        $stm->setFetchMode(PDO::FETCH_CLASS, Record::class);
         $stm->execute();
 
+        $stm->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, Record::class);
         $record = $stm->fetch();
         if (!$record) {
             throw new MissingRecord;

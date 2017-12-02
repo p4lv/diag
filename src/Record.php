@@ -16,23 +16,13 @@ class Record implements DiagRecord
 
     public function __construct(array $data = [])
     {
-        if(!$this->version)
         $this->version = $data['version'] ?? 0;
-
-        if(!$this->createdAt)
         $this->createdAt = $data['createdAt'] ?? $data['created_at'] ?? date('Y-m-d H:i:s');
-
-        if(!$this->id)
         $this->id = $data['id'] ?? null;
-        if(!$this->message)
         $this->message = $data['message'] ?? '';
-        if(!$this->object)
         $this->object = $data['object'] ?? null;
-        if(!$this->eventType)
         $this->eventType = $data['event'] ?? $data['eventType'] ?? 'general';
-        if(!$this->severity)
         $this->severity = $data['severity'] ?? Severity::LOG;
-        if(!$this->projectId)
         $this->projectId = $data['projectId'] ?? $data['project_id'] ?? 0;
     }
 
