@@ -81,7 +81,7 @@ version
             throw new MissingRecord;
         }
 
-        $stm->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, Record::class);
+        $stm->setFetchMode(PDO::FETCH_CLASS | PDO::FETCH_PROPS_LATE, Record::class);
 
         return $stm->fetch();
     }
@@ -89,7 +89,7 @@ version
     public function search(array $filters): array
     {
         $response = [];
-        if(!\count($filters)) {
+        if (!\count($filters)) {
             return $response;
         }
 
