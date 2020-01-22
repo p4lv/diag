@@ -576,16 +576,16 @@
         },
         {
             "name": "symfony/routing",
-            "version": "4.0.x-dev",
+            "version": "4.1.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/routing.git",
-                "reference": "698f48e01196dd99c14fdae980e55bd7c71fae40"
+                "reference": "da122c1ee55cf15bf9784e739b2251dec638f9cc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/routing/zipball/698f48e01196dd99c14fdae980e55bd7c71fae40",
-                "reference": "698f48e01196dd99c14fdae980e55bd7c71fae40",
+                "url": "https://api.github.com/repos/symfony/routing/zipball/da122c1ee55cf15bf9784e739b2251dec638f9cc",
+                "reference": "da122c1ee55cf15bf9784e739b2251dec638f9cc",
                 "shasum": ""
             },
             "require": {
@@ -616,7 +616,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0-dev"
+                    "dev-master": "4.1-dev"
                 }
             },
             "autoload": {
@@ -649,7 +649,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2018-07-26T11:22:46+00:00"
+            "time": "2019-01-29T09:39:33+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -2340,7 +2340,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "symfony/routing": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
