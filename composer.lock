@@ -653,16 +653,16 @@
         },
         {
             "name": "symfony/yaml",
-            "version": "4.0.x-dev",
+            "version": "4.4.x-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/yaml.git",
-                "reference": "05f66d707cfa60d553e419ec038d5474c2d5d1f2"
+                "reference": "cd014e425b3668220adb865f53bff64b3ad21767"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/yaml/zipball/05f66d707cfa60d553e419ec038d5474c2d5d1f2",
-                "reference": "05f66d707cfa60d553e419ec038d5474c2d5d1f2",
+                "url": "https://api.github.com/repos/symfony/yaml/zipball/cd014e425b3668220adb865f53bff64b3ad21767",
+                "reference": "cd014e425b3668220adb865f53bff64b3ad21767",
                 "shasum": ""
             },
             "require": {
@@ -673,7 +673,7 @@
                 "symfony/console": "<3.4"
             },
             "require-dev": {
-                "symfony/console": "~3.4|~4.0"
+                "symfony/console": "^3.4|^4.0|^5.0"
             },
             "suggest": {
                 "symfony/console": "For validating YAML files using the lint command"
@@ -681,7 +681,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "4.0-dev"
+                    "dev-master": "4.4-dev"
                 }
             },
             "autoload": {
@@ -708,7 +708,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2018-07-26T11:22:46+00:00"
+            "time": "2020-01-21T11:12:16+00:00"
         }
     ],
     "packages-dev": [
@@ -2340,7 +2340,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "symfony/yaml": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
